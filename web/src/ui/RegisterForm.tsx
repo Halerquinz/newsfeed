@@ -2,6 +2,7 @@ import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import React from "react";
 import { InputField } from "../form-fields/InputField";
+import { toErrorMap } from "../ultils/toErrorMap";
 import { Button } from "./Button";
 import { NativeSelect } from "./NativeSelect";
 
@@ -23,7 +24,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({}) => {
         dateOfBirth: "",
         sex: "",
       }}
-      onSubmit={async (values) => {
+      onSubmit={async (values, { setErrors }) => {
         const response = await fetch("http://localhost:5000/auth/register", {
           headers: {
             "Content-Type": "application/json",
@@ -33,6 +34,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({}) => {
         });
 
         const data = await response.json();
+        if (data.status === "fail") {
+          console.log(data);
+          setErrors(toErrorMap(data));
+        }
         console.log(data);
         if (data.status === "success") {
           push("/dash");
@@ -46,40 +51,40 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({}) => {
             style={{ gridTemplateColumns: "1fr 1fr" }}
           >
             <InputField
-              className={`h-6 rounded-8 bg-primary-700`}
+              className={`h-6 rounded-8 `}
               name="lastname"
               placeholder="Họ"
             />
             <InputField
-              className={`h-6 rounded-8 bg-primary-700`}
+              className={`h-6 rounded-8 `}
               name="firstname"
               placeholder="Tên"
             />
           </div>
           <InputField
-            className={`h-6 rounded-8 bg-primary-700`}
+            className={`h-6 rounded-8 `}
             name="username"
             placeholder="Tên đăng nhập"
           />
           <InputField
-            className={`h-6 rounded-8 bg-primary-700`}
+            className={`h-6 rounded-8 `}
             name="email"
             placeholder="email"
           />
           <InputField
-            className={`h-6 rounded-8 bg-primary-700`}
+            className={`h-6 rounded-8 `}
             name="password"
             placeholder="Mật khẩu"
             type="password"
           />
           <InputField
-            className={`h-6 rounded-8 bg-primary-700`}
+            className={`h-6 rounded-8 `}
             name="confirmPassword"
             placeholder="Nhập lại mật khẩu"
             type="password"
           />
           <InputField
-            className={`h-6 rounded-8 bg-primary-700`}
+            className={`h-6 rounded-8 `}
             name="phone"
             placeholder="Số điện thoại"
           />
