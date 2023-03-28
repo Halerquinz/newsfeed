@@ -10,10 +10,12 @@ const router = Router()
 router.post(
     '/register',
     [
-        check('firstname', 'Họ bạn là gì')
-            .isEmpty(),
-        check('lastname', 'Tên bạn là gì')
-            .isEmpty(),
+        check('lastname')
+            .notEmpty()
+            .withMessage('Họ không được để trống'),
+        check('firstname')
+            .notEmpty()
+            .withMessage('Tên không được để trống'),
         body('username', 'Tên đăng nhập không được để trống')
             .isLength({ min: 6 })
             .trim()
@@ -33,7 +35,24 @@ router.post(
                     });
                 }
             }),
-        body('password', 'Mật khẩu không được để trống')
+        check('email', 'Địa chỉ email không được để trống')
+            .notEmpty()
+            .isEmail()
+            .trim()
+            .withMessage('Địa chỉ email không hợp lệ')  
+            .custom(async (value: string, {req}) => {
+                const userRepo: Repository<User> = await AppDataSource.getRepository(User)
+                return userRepo.findOne({ where: { email: value } })
+                    .then(userDoc => {
+                        if (userDoc) {
+                            return Promise.reject(
+                                'Địa chỉ email này đã được dùng để đăng ký tài khoản khác'
+                            );
+                        }
+                });
+            }),
+       
+        body('password', 'Mật khẩu phải tối thiểu 6 ký tự')
             .isLength({ min: 6 })
             .isAlphanumeric()
             .trim()
@@ -62,23 +81,7 @@ router.post(
                         }
                 });
             }),
-        check('email', 'Địa chỉ email không được để trống')
-            .notEmpty()
-            .isEmail()
-            .trim()
-            .withMessage('Địa chỉ email không hợp lệ')
-            .custom(async (value: string, {req}) => {
-                const userRepo: Repository<User> = await AppDataSource.getRepository(User)
-                return userRepo.findOne({ where: { email: value } })
-                    .then(userDoc => {
-                        if (userDoc) {
-                            return Promise.reject(
-                                'Địa chỉ email này đã được dùng để đăng ký tài khoản khác'
-                            );
-                        }
-                });
-            }),
-       
+        
         body('sex', 'Giới tính không được để trống')
             .notEmpty(),
     ], 
@@ -93,16 +96,15 @@ router.post('/login',
             .withMessage('Tên đăng nhập không hợp lệ'),
         body('password', 'Mật khẩu không được để trống')
             .isLength({ min: 6 })
-            .isAlphanumeric()
             .trim()
-            .withMessage('Mật khẩu không được để trống'),
+            .withMessage('Mật khẩu không hợp lệ'),
     ], 
     authController.login
 )
 
 router.post('/forgot-password',
     [
-        check('email', 'Email field is required')
+        check('email', 'Địa chỉ email không được để trống')
             .notEmpty()
             .isEmail()
             .trim()

@@ -61,7 +61,7 @@ class AuthController {
         return res.status(400).json({
           status: "fail",
           field: "username",
-          msg: "Username is exist",
+          msg: "Tên đăng nhập đã tồn tại, vui lòng chọn một tên khác",
         });
       }
       const existEmail = await userRepo.findOne({ where: { email } });
@@ -69,7 +69,7 @@ class AuthController {
         return res.status(400).json({
           status: "fail",
           field: "email",
-          msg: "Email is already used to register another account",
+          msg: "Địa chỉ email này đã được dùng để đăng ký tài khoản khác",
         });
       }
       const existPhone = await userRepo.findOne({ where: { phone } });
@@ -77,14 +77,14 @@ class AuthController {
         return res.status(400).json({
           status: "fail",
           field: "phone",
-          msg: "Phone is already used to register another account",
+          msg: "Số điện thoại này đã được dùng để đăng ký tài khoản khác",
         });
       }
       if (password !== confirmPassword) {
         return res.status(400).json({
           status: "fail",
           field: "confirmPassword",
-          msg: "Confirm password have to match",
+          msg: "Xác nhận mật khẩu không chính xác",
         });
       }
       const salt = await bcrypt.genSalt(10);
@@ -138,18 +138,18 @@ class AuthController {
       if (!user) {
         return res
           .status(400)
-          .json({ status: "fail", field: "username", msg: "User not found" });
+          .json({ status: "fail", field: "username", msg: "Tên đăng nhập không đúng" });
       }
       const isEqual: boolean = await bcrypt.compare(password, user.password);
       if (!isEqual) {
         return res.status(400).json({
           status: "fail",
           field: "password",
-          msg: "Incorrect password",
+          msg: "Mật khẩu không đúng",
         });
       }
       if (user.isDeleted === true) {
-        return res.status(400).json({ status: "fail", msg: "User not found" });
+        return res.status(400).json({ status: "fail", msg: "Tên đăng nhập không đúng" });
       }
       const token: string = await createToken(user.id);
       res
