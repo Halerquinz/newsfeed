@@ -10,10 +10,10 @@ const router = Router()
 router.post(
     '/register',
     [
-        body('fistname', 'Họ bạn là gì')
-            .notEmpty(),
-        body('lastname', 'Tên bạn là gì')
-            .notEmpty(),
+        check('firstname', 'Họ bạn là gì')
+            .isEmpty(),
+        check('lastname', 'Tên bạn là gì')
+            .isEmpty(),
         body('username', 'Tên đăng nhập không được để trống')
             .isLength({ min: 6 })
             .trim()
@@ -37,7 +37,7 @@ router.post(
             .isLength({ min: 6 })
             .isAlphanumeric()
             .trim()
-            .withMessage('Invalid password'),
+            .withMessage('Mật khẩu không hợp lệ'),
         body('confirmPassword')
             .trim()
             .custom((value: string, {req}) => {
@@ -87,15 +87,15 @@ router.post(
 
 router.post('/login',
     [
-        body('username', 'Username field is required')
+        body('username', 'Tên đăng nhập không được để trống')
             .isLength({ min: 6 })
             .trim()
-            .withMessage('Invalid username'),
-        body('password', 'Password field is required')
+            .withMessage('Tên đăng nhập không hợp lệ'),
+        body('password', 'Mật khẩu không được để trống')
             .isLength({ min: 6 })
             .isAlphanumeric()
             .trim()
-            .withMessage('Invalid password'),
+            .withMessage('Mật khẩu không được để trống'),
     ], 
     authController.login
 )
