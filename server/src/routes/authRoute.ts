@@ -10,26 +10,30 @@ const router = Router()
 router.post(
     '/register',
     [
-        body('username', 'Username field is required')
+        body('fistname', 'Họ bạn là gì')
+            .notEmpty(),
+        body('lastname', 'Tên bạn là gì')
+            .notEmpty(),
+        body('username', 'Tên đăng nhập không được để trống')
             .isLength({ min: 6 })
             .trim()
-            .withMessage('Minimum length of username should be 6')
+            .withMessage('Tên đăng nhập phải tối thiểu 6 ký tự')
             .custom(async (value: string, {req}) => {
                 if (value === 'adminapp') {
-                    throw new Error('This username is forbidden.');
+                    throw new Error('Tên đăng nhập bị cấm');
                 } else {
                     const userRepo: Repository<User> = await AppDataSource.getRepository(User)
                     return userRepo.findOne({ where: { username: value } })
                         .then(userDoc => {
                             if (userDoc) {
                                 return Promise.reject(
-                                    'Username exist already, please pick a different one'
+                                    'Tên đăng nhập đã tồn tại, vui lòng chọn một tên khác'
                                 );
                             }
                     });
                 }
             }),
-        body('password', 'Password field is required')
+        body('password', 'Mật khẩu không được để trống')
             .isLength({ min: 6 })
             .isAlphanumeric()
             .trim()
@@ -38,46 +42,43 @@ router.post(
             .trim()
             .custom((value: string, {req}) => {
                 if (value !== req.body.password) {
-                    throw new Error('Confirm password have to match');
+                    throw new Error('Xác nhận mật khẩu không chính xác');
                 }
                 return true; 
             }),
-        check('phone', 'Phone field is required')
+        check('phone', 'Số điện thoại không được để trống')
             .notEmpty()
             .isNumeric()
-            .withMessage('Invalid phone number')
+            .withMessage('Số điện thoại không hợp lệ')
             .custom(async (value: string, {req}) => {
                 const userRepo: Repository<User> = await AppDataSource.getRepository(User)
                 return userRepo.findOne({ where: { phone: value } })
                     .then(userDoc => {
                         if (userDoc) {
                             return Promise.reject(
-                                'Phone is already used to register another account, please pick a different one'
+                                'Số điện thoại này đã được dùng để đăng ký tài khoản khác'
                             );
                         }
                 });
             }),
-        check('email', 'Email field is required')
+        check('email', 'Địa chỉ email không được để trống')
             .notEmpty()
             .isEmail()
             .trim()
-            .withMessage('Invalid email')
+            .withMessage('Địa chỉ email không hợp lệ')
             .custom(async (value: string, {req}) => {
                 const userRepo: Repository<User> = await AppDataSource.getRepository(User)
                 return userRepo.findOne({ where: { email: value } })
                     .then(userDoc => {
                         if (userDoc) {
                             return Promise.reject(
-                                'Email address is already used to register another account, please pick a different one'
+                                'Địa chỉ email này đã được dùng để đăng ký tài khoản khác'
                             );
                         }
                 });
             }),
-        check('fistname', 'Firstname field is required')
-            .isEmpty(),
-        body('lastname', 'Lastname field is required')
-            .notEmpty(),
-        body('sex', 'Sex field is required')
+       
+        body('sex', 'Giới tính không được để trống')
             .notEmpty(),
     ], 
     authController.register
