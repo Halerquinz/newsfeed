@@ -36,8 +36,8 @@ class AuthController {
         .status(400)
         .json({ 
           status: "fail", 
+          field: errors.array()[0].param,
           msg: errors.array()[0].msg, 
-          field: errors.array()[0].param 
         });
     }
     const authRequest: AuthRequest = req.body;
@@ -124,8 +124,8 @@ class AuthController {
         .status(400)
         .json({ 
           status: "fail", 
+          field: errors.array()[0].param,
           msg: errors.array()[0].msg,
-          field: errors.array()[0].param 
         });
     }
     const authRequest: AuthRequest = req.body;
