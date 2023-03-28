@@ -36,3 +36,4 @@ export class Comment extends BaseEntity {
   @UpdateDateColumn()
   updatedDate: Date
 }
+
