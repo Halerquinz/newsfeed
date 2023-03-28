@@ -7,6 +7,7 @@ import { Repository } from "typeorm";
 import { validationResult, param } from "express-validator";
 import { Sex } from "../entities/User";
 import nodemailer from "nodemailer";
+import { error } from "console";
 
 const createToken = (userId: number) => {
   return jwt.sign({ userId }, "thuc_tap_co_so", { expiresIn: "1d" });
@@ -33,7 +34,11 @@ class AuthController {
     if (!errors.isEmpty()) {
       return res
         .status(400)
-        .json({ status: "fail", msg: errors.array()[0].msg });
+        .json({ 
+          status: "fail", 
+          msg: errors.array()[0].msg, 
+          field: errors.array()[0].param 
+        });
     }
     const authRequest: AuthRequest = req.body;
     const {
@@ -117,7 +122,11 @@ class AuthController {
     if (!errors.isEmpty()) {
       return res
         .status(400)
-        .json({ status: "fail", msg: errors.array()[0].msg });
+        .json({ 
+          status: "fail", 
+          msg: errors.array()[0].msg,
+          field: errors.array()[0].param 
+        });
     }
     const authRequest: AuthRequest = req.body;
     const { username, password } = authRequest;
