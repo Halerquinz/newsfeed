@@ -49,7 +49,8 @@ router.post(
         check('phone', 'Số điện thoại không được để trống')
             .notEmpty()
             .isNumeric()
-            .withMessage('Số điện thoại không hợp lệ')
+            .isLength({ min: 10 })
+            .withMessage('Số điện thoại phải là số và tối thiểu 10 kí tự')
             .custom(async (value: string, {req}) => {
                 const userRepo: Repository<User> = await AppDataSource.getRepository(User)
                 return userRepo.findOne({ where: { phone: value } })
