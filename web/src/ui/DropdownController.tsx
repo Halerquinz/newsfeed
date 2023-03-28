@@ -3,7 +3,7 @@ import { usePopper } from "react-popper";
 
 interface DropdownControllerProps {
   className?: string;
-  overlay: (c: () => void) => React.ReactNode;
+  overlay: () => React.ReactNode;
   zIndex?: number;
   children?: React.ReactNode;
   innerClassName?: string;
@@ -55,7 +55,7 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
         style={styles.offset}
         className={`${visible ? "" : "hidden"} ${innerClassName}`}
       >
-        {visible ? overlay(() => setVisibility(false)) : null}
+        {visible ? overlay() : null}
       </div>
     </div>
   );

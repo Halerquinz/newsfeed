@@ -74,10 +74,10 @@ export class User extends BaseEntity {
   @Column()
   isDeleted: boolean;
 
-  @OneToMany(type => Post, post => post.user)
+  @OneToMany((type) => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToMany(type => User, user => user.following)
+  @ManyToMany((type) => User, (user) => user.following)
   @JoinTable({
     name: "follows",
     joinColumn: {
@@ -91,22 +91,22 @@ export class User extends BaseEntity {
   })
   followers: User[];
 
-  @ManyToMany(type => User, user => user.followers)
+  @ManyToMany((type) => User, (user) => user.followers)
   following: User[];
 
-  @OneToMany(() => Comment, comment => comment.user)
+  @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  @OneToMany(() => Like, like => like.user)
+  @OneToMany(() => Like, (like) => like.user)
   likes: Like[];
 
-  @OneToMany(() => Chat, chat => chat.user1)
+  @OneToMany(() => Chat, (chat) => chat.user1)
   chatUser1: Chat[];
 
-  @OneToMany(() => Chat, chat => chat.user2)
+  @OneToMany(() => Chat, (chat) => chat.user2)
   chatUser2: Chat[];
 
-  @OneToMany(() => Message, message => message.sender)
+  @OneToMany(() => Message, (message) => message.sender)
   messages: Message[];
 
   @CreateDateColumn()
