@@ -10,6 +10,7 @@ import followRoute from "./routes/followRoute";
 import postRoute from "./routes/postRoute";
 import chatRoute from "./routes/chatRoute";
 import messageRoute from "./routes/messageRoute";
+import commentRoute from './routes/commentRoute'
 import path from "path";
 import { Server, Socket } from "socket.io";
 import * as dotenv from "dotenv";
@@ -41,6 +42,7 @@ app.use("/follow", followRoute);
 app.use("/post", postRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
+app.use('/comment', commentRoute)
 
 interface ActiveUsers {
   userId: number;
