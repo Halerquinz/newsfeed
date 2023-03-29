@@ -1,3 +1,18 @@
-import { LoginPageTest } from "../modules/landing-page/LoginPageTest";
+import React from "react";
+import { PostController } from "../modules/dashboard/PostController";
+import dynamic from "next/dynamic";
+import NoSSR from "../ultils/noSSR";
 
-export default LoginPageTest;
+interface testProps {}
+
+const Test: React.FC<testProps> = ({}) => {
+  return (
+    <div>
+      <NoSSR>
+        <PostController />;
+      </NoSSR>
+    </div>
+  );
+};
+
+export default Test;
