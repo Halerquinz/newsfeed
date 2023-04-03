@@ -3,13 +3,15 @@ import React from "react";
 import { SingleUser } from "./user/SingleUser";
 
 interface AvailableUserType {
-  fullname: string;
+  firstname: string;
+  lastname: string;
   profilePicture: string;
   username: string;
 }
 
 export const AvailableUser: React.FC<AvailableUserType> = ({
-  fullname,
+  firstname,
+  lastname,
   profilePicture,
   username,
 }) => (
@@ -17,7 +19,7 @@ export const AvailableUser: React.FC<AvailableUserType> = ({
     <SingleUser size="sm" src={profilePicture} username={username} />
     <div className="ml-3 flex flex-col justify-center overflow-hidden">
       <Link href={"/"}>
-        <h5 className="font-bold text-primary-100">{fullname}</h5>
+        <h5 className="font-bold text-primary-100">{`${firstname} ${lastname}`}</h5>
       </Link>
       <a className={`block truncate text-primary-300 hover:underline`}>
         {username}

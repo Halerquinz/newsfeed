@@ -23,21 +23,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   isCurrentUser = true,
   pfp = "",
 }) => {
-  // const { mutateAsync, isLoading: followLoading } =
-  //   useTypeSafeMutation("follow");
-  // const { mutateAsync: unblock, isLoading: unblockLoading } =
-  //   useTypeSafeMutation("userUnblock");
-  // const { mutateAsync: block, isLoading: blockLoading } =
-  //   useTypeSafeMutation("userBlock");
-
-  // const { t } = useTypeSafeTranslation();
-  // const updater = useTypeSafeUpdateQuery();
-  // const [showEditProfileModal, setShowEditProfileModal] = useState(false);
-  // const preloadPush = usePreloadPush();
-  // const update = useTypeSafeUpdateQuery();
-
   return (
-    // @TODO: Add the cover api (once it's implemented)}
     <ProfileHeaderWrapper
       coverUrl={
         "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/2d9b57d6-164a-4be2-b6c7-2b27afd5753f/d9mb9mb-1bed4022-6a0f-4525-90fc-a1a9848aba39.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzJkOWI1N2Q2LTE2NGEtNGJlMi1iNmM3LTJiMjdhZmQ1NzUzZlwvZDltYjltYi0xYmVkNDAyMi02YTBmLTQ1MjUtOTBmYy1hMWE5ODQ4YWJhMzkucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.RS7WWLOkhnsUdJO2QRATYR7oXUmGmmZptBQ5oifdMw0"

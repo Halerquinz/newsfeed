@@ -48,23 +48,6 @@ app.use("/post", postRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
 app.use("/comment", commentRoute);
-// app.get("/refresh_token", (req, res) => {
-//   const authorization = req.headers["authorization"];
-
-//   if (!authorization) {
-//     throw new Error("ngu chua dang nhap");
-//   }
-
-//   let verifyToken: any;
-//   try {
-//     const token = authorization.split(" ")[1];
-//     verifyToken = verify(token, "thuc_tap_co_so");
-//   } catch (err) {
-//     console.log(err);
-//     throw new Error("not authenticated");
-//   }
-//   res.send(verifyToken);
-// });
 app.get("/refresh_token", isAuth, async (req, res) => {
   if (req.userId) {
     const id = req.userId;

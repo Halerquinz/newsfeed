@@ -42,6 +42,25 @@ class UserController {
       res.status(500).json({ status: "fail", msg });
     }
   }
+  async getUsers(req: Request, res: Response) {
+    try {
+      const userRepo: Repository<User> = await AppDataSource.getRepository(
+        User
+      );
+      const users = await userRepo.find({
+        select: {
+          id: true,
+          username: true,
+          firstname: true,
+          lastname: true,
+          profilePicture: true,
+        },
+      });
+      return res.status(200).json({ status: "success", data: users });
+    } catch {
+      return res.status(500).json({ status: "fail", msg: "error" });
+    }
+  }
 
   async updateUser(req: Request, res: Response) {
     const errors = validationResult(req);

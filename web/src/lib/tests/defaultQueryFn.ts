@@ -13,6 +13,7 @@ export const defaultQueryFn = async ({ queryKey }: { queryKey: string }) => {
   if (res.status !== 200) {
     throw new Error(await res.text());
   }
+  const data = await res.json();
 
-  await res.json();
+  return data;
 };
