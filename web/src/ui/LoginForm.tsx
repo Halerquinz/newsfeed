@@ -1,6 +1,6 @@
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useRef } from "react";
 import { InputField } from "../form-fields/InputField";
 import { useTokenStore } from "../modules/auth/useTokenStore";
 import { toErrorMap } from "../ultils/toErrorMap";
@@ -10,6 +10,7 @@ interface LoginFormProps {}
 
 export const LoginForm: React.FC<LoginFormProps> = ({}) => {
   const { push } = useRouter();
+  const isCurrent = useRef(true);
 
   return (
     <Formik
@@ -29,9 +30,27 @@ export const LoginForm: React.FC<LoginFormProps> = ({}) => {
           setErrors(toErrorMap(data));
         }
 
+        // let data;
+        // fetch("http://localhost:5000/auth/login", {
+        //   headers: {
+        //     "Content-Type": "application/json",
+        //   },
+        //   method: "POST",
+        //   body: JSON.stringify(values),
+        // }).then((res) =>
+        //   res.json().then((x) => {
+        //     setTimeout(() => {
+        //       data = x;
+        //       console.log(data);
+        //     }, 2000);
+        //   })
+        // );
+
         if (data.status === "success") {
+          // setTimeout(() => {
           useTokenStore.getState().setToken({ token: data.data.token });
           push("/dash");
+          // }, 2000);
         }
       }}
     >

@@ -32,7 +32,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 }) => {
   return (
     <button
-      // onClick={onClick}
+      onClick={onClick}
       className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out hover:bg-primary-700"
     >
       <PostCardLeft>{<PostCardAvatar avatar={avatar} />}</PostCardLeft>

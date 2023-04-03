@@ -36,7 +36,8 @@ const Page = ({}) => {
   return (
     <>
       <PostCard
-        onClick={() => push("/dash")}
+        key={1}
+        onClick={() => push("/user")}
         avatar={data.avatar}
         comments={data.comment}
         createdDate={data.createdDate}
@@ -47,6 +48,7 @@ const Page = ({}) => {
         fullname={data.fullname}
       />
       <PostCard
+        key={2}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}
@@ -58,6 +60,7 @@ const Page = ({}) => {
         fullname={data.fullname}
       />
       <PostCard
+        key={3}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}
@@ -68,6 +71,7 @@ const Page = ({}) => {
         fullname={data.fullname}
       />
       <PostCard
+        key={4}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}
@@ -79,6 +83,7 @@ const Page = ({}) => {
         fullname={data.fullname}
       />
       <PostCard
+        key={5}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}
@@ -90,6 +95,7 @@ const Page = ({}) => {
         fullname={data.fullname}
       />
       <PostCard
+        key={6}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}
@@ -97,10 +103,13 @@ const Page = ({}) => {
         desc={data.desc}
         likes={data.likes}
         username={data.username}
-        image={data.image}
+        image={
+          "https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP4507-NPUB31584_00-UAVIRTUALB000027/image?w=320&h=320&bg_color=000000&opacity=100&_version=00_09_000"
+        }
         fullname={data.fullname}
       />
       <PostCard
+        key={7}
         onClick={() => push("/dash")}
         avatar={data.avatar}
         comments={data.comment}

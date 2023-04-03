@@ -10,10 +10,15 @@ import followRoute from "./routes/followRoute";
 import postRoute from "./routes/postRoute";
 import chatRoute from "./routes/chatRoute";
 import messageRoute from "./routes/messageRoute";
-import commentRoute from './routes/commentRoute'
+import commentRoute from "./routes/commentRoute";
+import { verify } from "jsonwebtoken";
 import path from "path";
 import { Server, Socket } from "socket.io";
 import * as dotenv from "dotenv";
+import { resolveSoa } from "dns";
+import isAuth from "./middlewares/isAuth";
+import { Repository } from "typeorm";
+import { User } from "./entities/User";
 dotenv.config();
 
 const app = express();
@@ -42,7 +47,48 @@ app.use("/follow", followRoute);
 app.use("/post", postRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
-app.use('/comment', commentRoute)
+app.use("/comment", commentRoute);
+// app.get("/refresh_token", (req, res) => {
+//   const authorization = req.headers["authorization"];
+
+//   if (!authorization) {
+//     throw new Error("ngu chua dang nhap");
+//   }
+
+//   let verifyToken: any;
+//   try {
+//     const token = authorization.split(" ")[1];
+//     verifyToken = verify(token, "thuc_tap_co_so");
+//   } catch (err) {
+//     console.log(err);
+//     throw new Error("not authenticated");
+//   }
+//   res.send(verifyToken);
+// });
+app.get("/refresh_token", isAuth, async (req, res) => {
+  if (req.userId) {
+    const id = req.userId;
+    try {
+      const userRepo: Repository<User> = await AppDataSource.getRepository(
+        User
+      );
+      const user: User | null = await userRepo.findOne({
+        where: { id: parseInt(id) },
+      });
+      if (!user) {
+        return res.status(400).json({ status: "fail", msg: "User not found" });
+      }
+      const { password, ...orthers } = user;
+      res.status(200).json({ status: "success", data: orthers });
+    } catch (error) {
+      let msg;
+      if (error instanceof Error) {
+        msg = error.message;
+      }
+      res.status(500).json({ status: "fail", msg });
+    }
+  }
+});
 
 interface ActiveUsers {
   userId: number;
@@ -63,7 +109,7 @@ const startApp = async () => {
         console.log("User is connected ", activeUsers);
         socket.on("new-user-add", (newUserId: number) => {
           console.log("newUserId: ", newUserId);
-          if (!activeUsers.some(user => user.userId === newUserId)) {
+          if (!activeUsers.some((user) => user.userId === newUserId)) {
             activeUsers.push({
               userId: newUserId,
               socketId: socket.id,
@@ -73,10 +119,10 @@ const startApp = async () => {
           io.emit("get-users", activeUsers);
         });
 
-        socket.on("send-message", data => {
+        socket.on("send-message", (data) => {
           const { receiverId } = data;
           const user: ActiveUsers | undefined = activeUsers.find(
-            user => user.userId === receiverId
+            (user) => user.userId === receiverId
           );
           console.log(`Sending from socket to: ${receiverId}`);
           console.log(data);
@@ -88,7 +134,7 @@ const startApp = async () => {
         });
 
         socket.on("disconnect", () => {
-          activeUsers.filter(user => user.socketId !== socket.id);
+          activeUsers.filter((user) => user.socketId !== socket.id);
           console.log("User is disconnected ", activeUsers);
           io.emit("get-users", activeUsers);
         });

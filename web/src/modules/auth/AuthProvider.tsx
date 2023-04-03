@@ -1,13 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTokenStore } from "./useTokenStore";
+import { apiBaseUrl } from "../../lib/tests/constants";
+import { User } from "../../types/User";
 
-type V = true | false;
+type V = { user: User | null } | null;
 
 export const AuthContext = React.createContext<{
   conn: V;
   setConn: (u: V) => void;
 }>({
-  conn: false,
+  conn: null,
   setConn: () => {},
 });
 
@@ -15,21 +17,30 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [conn, setConn] = useState(false);
-  const hasToken = useTokenStore((state) => !!state.token);
+  const [conn, setConn] = useState<V>(null);
+  const token = useTokenStore((state) => state.token);
 
   useEffect(() => {
-    if (!conn && hasToken) {
-      setConn(true);
+    if (!conn && token) {
+      fetch(`${apiBaseUrl}/refresh_token`, {
+        headers: {
+          authorization: `beared ${token}`,
+        },
+      }).then((res) =>
+        res.json().then((data) => {
+          setConn({ user: data.data });
+        })
+      );
     }
-  }, [hasToken]);
-
-  // useEffect(() => {
-  //   if (!conn) return;
-  // }, []);
+    if (conn && !token) {
+      setConn(null);
+    }
+  }, [token]);
 
   return (
-    <AuthContext.Provider value={useMemo(() => ({ conn, setConn }), [conn])}>
+    <AuthContext.Provider
+      value={useMemo(() => ({ conn, setConn }), [conn, setConn])}
+    >
       {children}
     </AuthContext.Provider>
   );

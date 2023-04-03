@@ -4,17 +4,17 @@ import { SingleUser } from "./user/SingleUser";
 interface UserSummaryCardProps {
   onClick?: () => void;
   id?: string;
-  username?: string;
+  username: string;
   numFollowers?: number;
   numFollowing?: number;
-  avatarUrl?: string;
+  profilePicture: string;
   about?: string;
   createdDate?: string;
-  fullname?: string;
+  fullname: string;
 }
 
 export const CreatedDate: React.FC<{ createAt?: string }> = ({ createAt }) => (
-  <p className="mt-3 font-bold text-accent">{`Joined ${createAt}`}</p>
+  <p className="mt-3 font-bold text-accent">{`Tham gia vào: ${createAt}`}</p>
 );
 
 export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
@@ -24,7 +24,7 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
   numFollowers,
   numFollowing,
   about,
-  avatarUrl,
+  profilePicture,
   createdDate,
   fullname,
 }) => {
@@ -32,7 +32,7 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
     <div className="flex w-full flex-col rounded-8 bg-primary-800 p-4">
       <button className="flex" onClick={onClick}>
         <div className="flex">
-          <SingleUser size="default" src={avatarUrl} />
+          <SingleUser size="default" src={profilePicture} />
         </div>
         <div className="mt-2 flex">
           <div className="ml-3 flex flex-col">
@@ -55,9 +55,11 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
           <span className="ml-1.5 lowercase text-primary-300">following</span>
         </div>
       </div>
-      <div className="mt-3 flex break-words text-left text-primary-300">
-        {about}
-      </div>
+      {about !== "null" && (
+        <div className="mt-3 flex break-words text-left text-primary-300">
+          {about}
+        </div>
+      )}
       <CreatedDate createAt={createdDate} />
     </div>
   );

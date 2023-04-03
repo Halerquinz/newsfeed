@@ -7,6 +7,7 @@ import { useTokenStore } from "../../modules/auth/useTokenStore";
 import { DropdownController } from "../DropdownController";
 import { SettingsDropdown } from "../SettingsDropdown";
 import { SingleUser } from "../user/SingleUser";
+import { apiBaseUrl } from "../../lib/tests/constants";
 
 interface RightHeaderProps {
   onMessagesClick?: (
@@ -22,6 +23,7 @@ export const RightHeader: React.FC<RightHeaderProps> = ({
   onNotificationsClick,
 }) => {
   const { conn } = useContext(AuthContext);
+
   const { push } = useRouter();
 
   if (!conn) {
@@ -49,7 +51,7 @@ export const RightHeader: React.FC<RightHeaderProps> = ({
         </button>
       )}
       <DropdownController
-        zIndex={20}
+        zIndex={10}
         className="fixed top-9 right-3 md:right-0"
         innerClassName="fixed transform -translate-x-full"
         overlay={() => (
@@ -64,7 +66,7 @@ export const RightHeader: React.FC<RightHeaderProps> = ({
         <SingleUser
           className={"focus:outline-no-chrome"}
           size="sm"
-          src="https://cand.com.vn/Files/Image/nguyenbinh/2020/03/02/5b291eba-916f-4afa-8b56-aa2eafc3c898.jpg"
+          src={conn.user?.profilePicture}
         />
       </DropdownController>
     </div>

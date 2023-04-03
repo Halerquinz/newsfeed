@@ -1,0 +1,11 @@
+export { default as SolidCompass } from "./SolidCompass";
+export { default as SolidFriends } from "./SolidFriends";
+export { default as SolidMessages } from "./SolidMessages";
+export { default as SolidNotification } from "./SolidNotification";
+export { default as SolidSearch } from "./SolidSearch";
+export { default as LgLogo } from "./LgLogo";
+export { default as LogoIcon } from "./LogoIcon";
+export { default as SolidUser } from "./SolidUser";
+export { default as WinCloseIcon } from "./WinCloseIcon";
+export { default as MacCloseIcon } from "./MacCloseIcon";
+export { default as SolidPersonAdd } from "./SolidPersonAdd";

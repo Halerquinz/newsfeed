@@ -55,7 +55,7 @@ export const onlineIndicatorStyleMap = {
 };
 
 interface SingleUserProps {
-  size: keyof typeof onlineIndicatorStyleMap;
+  size?: keyof typeof onlineIndicatorStyleMap;
   username?: string;
   src?: string;
   className?: string;
@@ -63,7 +63,7 @@ interface SingleUserProps {
 }
 
 export const SingleUser: React.FC<SingleUserProps> = ({
-  size,
+  size = "default",
   username,
   className,
   src,

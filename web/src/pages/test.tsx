@@ -1,7 +1,7 @@
 import React from "react";
 import { PostController } from "../modules/dashboard/PostController";
-import dynamic from "next/dynamic";
 import NoSSR from "../ultils/noSSR";
+import { apiBaseUrl } from "../lib/tests/constants";
 
 interface testProps {}
 

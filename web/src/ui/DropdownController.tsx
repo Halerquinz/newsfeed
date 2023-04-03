@@ -19,20 +19,19 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
   const [visible, setVisibility] = useState(false);
   const referenceRef = useRef<HTMLButtonElement>(null);
   const popperRef = useRef<HTMLDivElement>(null);
-  console.log(visible);
 
   const { styles, attributes } = usePopper(
     referenceRef.current,
     popperRef.current
   );
 
-  console.log(styles);
   useEffect(() => {
     const handleDocumentClick = (event: any) => {
       if (
         referenceRef.current?.contains(event.target) ||
         popperRef.current?.contains(event.target)
       ) {
+        // if clicks popper and dropdownController don't do anymore
         return;
       }
       setVisibility(false);
@@ -44,6 +43,7 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
     };
   }, []);
 
+  // this is popper
   const body = (
     <div
       className={`absolute ${className}`}
@@ -63,7 +63,10 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
     <React.Fragment>
       <button
         className="focus:outline-no-chrome flex"
-        onClick={() => setVisibility(!visible)}
+        ref={referenceRef}
+        onClick={() => {
+          setVisibility(!visible);
+        }}
       >
         {children}
       </button>

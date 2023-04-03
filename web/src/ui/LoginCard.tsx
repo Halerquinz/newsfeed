@@ -12,8 +12,6 @@ interface LoginCardProps {
 }
 
 export const LoginCard: React.FC<LoginCardProps> = ({ closeAction }) => {
-  console.log("render");
-
   return (
     <>
       <div className="flex">
