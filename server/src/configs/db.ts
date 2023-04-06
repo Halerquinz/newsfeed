@@ -8,6 +8,7 @@ import { Comment } from "../entities/Comment";
 import { Like } from "../entities/Like";
 import { Chat } from "../entities/Chat";
 import { Message } from "../entities/Message";
+import { FakePost1680699268027 } from "../migrations/1680699268027-FakePost";
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -19,4 +20,5 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Post, Comment, Like, Chat, Message],
+  migrations: [FakePost1680699268027],
 });

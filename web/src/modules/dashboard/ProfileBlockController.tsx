@@ -3,6 +3,8 @@ import { ProfileBlock } from "../../ui/ProfileBlock";
 import { UserSummaryCard } from "../../ui/UserSummaryCard";
 import { AuthContext } from "../auth/AuthProvider";
 import { formatDay } from "../../lib/tests/formatDay";
+import { Spinner } from "../../ui/Spinner";
+import { useRouter } from "next/router";
 
 interface ProfileBlockControllerProps {}
 
@@ -11,6 +13,7 @@ export const ProfileBlockController: React.FC<
 > = ({}) => {
   // props onClick in UserSummaryCard: click -> user detail Page
   const { conn } = useContext(AuthContext);
+  const { push } = useRouter();
 
   if (!conn) {
     return null;
@@ -28,6 +31,7 @@ export const ProfileBlockController: React.FC<
             createdDate={formatDay(conn.user?.createdDate!)}
             numFollowers={2000}
             numFollowing={1000}
+            onClick={() => push(`/u/${conn.user?.id}`)}
           />
         }
       />

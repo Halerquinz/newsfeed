@@ -2,34 +2,28 @@ import React, { useContext } from "react";
 import { AvailableUser, AvailableUserWrapper } from "../../ui/AvailableUser";
 import { AuthContext } from "../auth/AuthProvider";
 import { useQuery } from "react-query";
-import { isServer } from "../../lib/tests/isServer";
+import { Spinner } from "../../ui/Spinner";
+import { TitleText } from "../../ui/TitleText";
+import { Data, UserSummaryProfile } from "../../types/util-types";
 
 interface AvailableUserControllerProps {
   children?: React.ReactNode;
 }
 
-interface userSummaryProfile {
-  id: string;
-  username: string;
-  firstname: string;
-  profilePicture: string;
-}
-
-type Data = {
-  status: "success" | "fail";
-  data: [userSummaryProfile];
-};
 export const Page: React.FC<{}> = ({}) => {
-  const { conn } = useContext(AuthContext);
-  const { data, isLoading } = useQuery<Data>({
+  const { data, isLoading } = useQuery<Data<UserSummaryProfile[]>>({
     queryKey: ["/user/users/getProfile"],
+    staleTime: Infinity,
+    refetchOnMount: "always",
   });
 
-  const userData = data?.data;
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <React.Fragment>
-      {userData?.map((user: any) => (
+      {data?.data?.map((user: UserSummaryProfile) => (
         <AvailableUser {...user} key={user.id} />
       ))}
     </React.Fragment>
@@ -44,9 +38,13 @@ export const AvailableUserController: React.FC<
   if (!conn) {
     return null;
   }
+
   return (
-    <AvailableUserWrapper>
-      <Page />
-    </AvailableUserWrapper>
+    <>
+      <TitleText className="sticky mb-3" nameTitle="Người dùng" />
+      <AvailableUserWrapper>
+        <Page />
+      </AvailableUserWrapper>
+    </>
   );
 };

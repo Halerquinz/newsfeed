@@ -19,6 +19,7 @@ import { resolveSoa } from "dns";
 import isAuth from "./middlewares/isAuth";
 import { Repository } from "typeorm";
 import { User } from "./entities/User";
+import { Post } from "./entities/Post";
 dotenv.config();
 
 const app = express();
@@ -47,7 +48,7 @@ app.use("/follow", followRoute);
 app.use("/post", postRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
-app.use("/comment", commentRoute);
+// app.use("/comment", commentRoute);
 app.get("/refresh_token", isAuth, async (req, res) => {
   if (req.userId) {
     const id = req.userId;

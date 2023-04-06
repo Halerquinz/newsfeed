@@ -1,28 +1,38 @@
-import { 
-    Entity, 
-    BaseEntity, 
-    ManyToOne, 
-    PrimaryGeneratedColumn, 
-    CreateDateColumn, 
-    UpdateDateColumn
-} from 'typeorm'
-import { Post } from './Post'
-import { User } from './User'
+import {
+  Entity,
+  BaseEntity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  PrimaryColumn,
+  Column,
+} from "typeorm";
+import { Post } from "./Post";
+import { User } from "./User";
 
-@Entity('likes')
+@Entity("likes")
 export class Like extends BaseEntity {
-    @PrimaryGeneratedColumn()
-    id: number
+  @Column({ type: "int" })
+  value: number;
 
-    @ManyToOne(() => Post, (post) => post.comments)
-    post: Post
+  @PrimaryColumn()
+  userId: number;
 
-    @ManyToOne(() => User, (user) => user.comments)
-    user: User
+  @PrimaryColumn()
+  postId: number;
 
-    @CreateDateColumn()
-    createdDate: Date
+  @ManyToOne(() => Post, (post) => post.likes, {
+    onDelete: "CASCADE",
+  })
+  post: Post;
 
-    @UpdateDateColumn()
-    updatedDate: Date
+  @ManyToOne(() => User, (user) => user.likes)
+  user: User;
+
+  @CreateDateColumn()
+  createdDate: Date;
+
+  @UpdateDateColumn()
+  updatedDate: Date;
 }
