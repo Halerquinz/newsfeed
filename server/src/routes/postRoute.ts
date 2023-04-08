@@ -12,6 +12,7 @@ router.post(
   postController.createPost
 );
 router.get("/get_posts", isAuth, postController.getPost);
+router.post("/like", isAuth, postController.likePost);
 router.get("/", isAuth, postController.getPosts);
 router.get("/user/:userId", isAuth, postController.getPostsOfUser);
 // router.put('/:postId', isAuth, postController.updatePost)

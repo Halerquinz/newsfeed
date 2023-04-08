@@ -94,6 +94,7 @@ body,
   height: 100%;
   width: 100%;
   justify-content: center;
+  scroll-behavior: smooth;
 }
 
 audio {

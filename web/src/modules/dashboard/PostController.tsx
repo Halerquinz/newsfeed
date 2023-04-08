@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { PostHeader } from "../../ui/PostHeader";
 import { MiddlePanel } from "../layouts/GridPanels";
 import { useRouter } from "next/router";
@@ -10,40 +10,59 @@ import { isServer } from "../../lib/tests/isServer";
 import { Data, Post, PostsResponse } from "../../types/util-types";
 import { Button } from "../../ui/Button";
 import { CenterLoader } from "../../ui/CenterLoader";
+import { apiBaseUrl } from "../../lib/tests/constants";
+import { useTokenStore } from "../auth/useTokenStore";
 
 interface PostControllerProps {}
 
-const Page = ({
-  cursor,
-  limit,
-  onLoadMore,
-  isLastPage,
-}: {
+const Page: React.FC<{
   cursor: string;
   limit: number;
   onLoadMore: (c: string) => void;
   isLastPage: boolean;
-}) => {
-  const { data, isLoading } = useQuery<Data<PostsResponse>>({
+}> = ({ cursor, limit, onLoadMore, isLastPage }) => {
+  const { data, isPreviousData } = useQuery<Data<PostsResponse>>({
     queryKey: ["/post", cursor, limit],
-    staleTime: Infinity,
-    enabled: !isServer,
+    // staleTime: Infinity,
+    staleTime: 1000,
     refetchOnMount: "always",
-    refetchInterval: 1000 * 60 * 5, // 5 minutes
+    refetchInterval: 10000,
+    // Magic React Query
+    cacheTime: 0,
   });
 
+  // const { token } = useTokenStore.getState();
+  // const { push } = useRouter();
+
+  // const [data, setData] = useState();
+  // useEffect(() => {
+  //   fetch(`${apiBaseUrl}/post`, {
+  //     headers: {
+  //       authorization: `beared ${token}`,
+  //       cursor,
+  //       limit,
+  //     } as any,
+  //   }).then((res) => {
+  //     res.json().then((data) => {
+  //       setData(data);
+  //     });
+  //   });
+  // }, []);
+  // console.log(data);
+
+  console.log(data?.data);
   if (!data) {
     return null;
   }
 
-  if (isLoading) {
-    return <CenterLoader />;
-  }
+  // if (isLoading) {
+  //   return <CenterLoader />;
+  // }
 
   return (
     <>
-      {data?.data.data.map((post: Post) => (
-        <PostCard {...post} key={post.id} />
+      {data?.data?.data?.map((post: Post) => (
+        <PostCard {...post} key={post.id} onClick={() => {}} />
       ))}
       {isLastPage && data?.data.nextCursor ? (
         <div className={`flex justify-center py-5`}>
@@ -85,7 +104,7 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
         <div className="flex flex-col space-y-4">
           {cursors.map((cursor, i) => (
             <Page
-              limit={5}
+              limit={10}
               key={i}
               cursor={cursor}
               onLoadMore={(c) => setCursors([...cursors, c])}

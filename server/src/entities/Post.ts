@@ -20,6 +20,12 @@ export class Post extends BaseEntity {
   @Column()
   userId: number;
 
+  @Column({ type: "int", default: 0 })
+  likeCounts: number;
+
+  @Column({ type: "int", default: 0 })
+  commentCounts: number;
+
   @ManyToOne(() => User, (user) => user.posts)
   user: User;
 

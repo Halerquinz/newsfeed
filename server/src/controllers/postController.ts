@@ -1,5 +1,5 @@
 import { AppDataSource } from "../configs/db";
-import { Request, Response } from "express";
+import { Request, Response, query } from "express";
 import { BaseEntity, Repository } from "typeorm";
 import { Post } from "../entities/Post";
 import { User } from "../entities/User";
@@ -84,6 +84,7 @@ class PostController {
   // cursor pagination =)) i think that
   async getPosts(req: Request, res: Response) {
     try {
+      const userId = req.userId;
       let cursor = req.get("cursor");
       const limit = Number(req.get("limit"));
       const limitPlusOne = limit + 1;
@@ -92,18 +93,18 @@ class PostController {
       }
 
       const queryString = `
-    select p.*, u.username, u.firstname, u.lastname, u.profilePicture
-    from posts p
-    inner join users u on u.id = p.userId
-    ${cursor ? `where p.createdDate < "${cursor}"` : ""}
-    order by p.createdDate DESC
-    limit ${limitPlusOne}
-    `;
+      select p.*, u.username, u.firstname, u.lastname, u.profilePicture,
+      (select value from likes where userId = ${userId} and postId = p.id) likeStatus
+      from posts p
+      inner join users u on u.id = p.userId
+      ${cursor ? `where p.createdDate < "${cursor}"` : ""}
+      order by p.createdDate DESC
+      limit ${limitPlusOne}
+      `;
       const posts = await AppDataSource.query(queryString);
 
       // const qb = await AppDataSource.getRepository(Post)
       //   .createQueryBuilder("p")
-      //   .innerJoinAndSelect("p.userId", "username")
       //   .orderBy("p.createdDate", "DESC")
       //   .take(limitPlusOne);
 
@@ -155,6 +156,49 @@ class PostController {
     //   }
     //   res.status(500).json({ status: "fail", msg });
     // }
+  }
+  async likePost(req: Request, res: Response) {
+    try {
+      const userId = req.userId;
+      const postId = req.get("postId");
+      const isLike = await AppDataSource.getRepository("likes").findOne({
+        where: { userId, postId },
+      });
+      let value = 1;
+      if (isLike?.value === 1) {
+        value = -1;
+      }
+
+      let firstQuery = "";
+      if (isLike) {
+        firstQuery = `update likes set value = ${value} where userId = ${userId} and postId = ${postId} `;
+      } else {
+        firstQuery = `
+        insert ignore into likes (userId, postId, value) values(${userId}, ${postId}, ${value})
+      `;
+      }
+      const secondQuery = `
+        update posts
+        set likeCounts = likeCounts + ${value}
+        where id = ${postId}
+      `;
+      console.log("query:", firstQuery);
+      const posts = await AppDataSource.transaction(async (tm) => {
+        await tm.query(firstQuery);
+        await tm.query(secondQuery);
+      });
+
+      res.status(200).json({
+        status: "success",
+        data: true,
+      });
+    } catch (error) {
+      let msg;
+      if (error instanceof Error) {
+        msg = error.message;
+      }
+      res.status(500).json({ status: "fail", msg });
+    }
   }
 
   // async getTimelinePost (req: Request, res: Response) {

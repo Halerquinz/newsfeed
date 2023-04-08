@@ -130,6 +130,7 @@ const startApp = async () => {
     console.log(error);
     console.log("Connect db fail");
   }
+  // await AppDataSource.getRepository("likes").delete({});
 };
 
 startApp();

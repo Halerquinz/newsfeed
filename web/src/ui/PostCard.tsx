@@ -7,8 +7,11 @@ import { PostCardLeft } from "./PostCardLeft";
 import { PostCardRight } from "./PostCardRight";
 import { PostInteract } from "./PostInteract";
 import { convertTZ } from "../ultils/convertTZ";
+import { apiBaseUrl } from "../lib/tests/constants";
+import { useTokenStore } from "../modules/auth/useTokenStore";
 
 interface PostCardProps {
+  id: number;
   profilePicture: string;
   firstname: string;
   lastname: string;
@@ -17,11 +20,13 @@ interface PostCardProps {
   description: string;
   image?: string;
   onClick?: () => void;
-  likes?: number;
-  comments?: number;
+  likeCounts: number;
+  commentCounts: number;
+  likeStatus: 1 | -1 | null;
 }
 
 export const PostCard: React.FC<PostCardProps> = ({
+  id,
   createdDate,
   firstname,
   lastname,
@@ -30,11 +35,12 @@ export const PostCard: React.FC<PostCardProps> = ({
   description,
   image,
   onClick,
-  likes,
-  comments,
+  likeCounts,
+  commentCounts,
+  likeStatus,
 }) => {
   return (
-    <button
+    <div
       onClick={onClick}
       className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out hover:bg-primary-700"
     >
@@ -47,8 +53,13 @@ export const PostCard: React.FC<PostCardProps> = ({
         />
         <PostCardDesc desc={description} />
         {image && <PostCardImage image={image} />}
-        <PostInteract comments={comments} likes={likes} />
+        <PostInteract
+          postId={id}
+          comments={commentCounts}
+          likes={likeCounts}
+          likeStatus={likeStatus}
+        />
       </PostCardRight>
-    </button>
+    </div>
   );
 };

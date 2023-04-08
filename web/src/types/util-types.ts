@@ -16,12 +16,15 @@ export interface Post {
   userId: number;
   description: string;
   image: string;
-  createdAt: string;
-  updatedAt: string;
+  createdDate: string;
+  updatedDate: string;
   username: string;
-  firsname: string;
+  firstname: string;
   lastname: string;
   profilePicture: string;
+  likeCounts: number;
+  commentCounts: number;
+  likeStatus: 1 | -1 | null;
 }
 
 export interface PostsResponse {
