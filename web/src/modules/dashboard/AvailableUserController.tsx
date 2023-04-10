@@ -17,7 +17,6 @@ export const Page: React.FC<{}> = ({}) => {
     refetchOnMount: "always",
   });
 
-  console.log("render user");
   if (isLoading) {
     return <Spinner />;
   }

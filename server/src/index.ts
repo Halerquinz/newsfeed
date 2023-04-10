@@ -63,12 +63,14 @@ app.get("/refresh_token", isAuth, async (req, res) => {
         return res.status(400).json({ status: "fail", msg: "User not found" });
       }
       const { password, ...orthers } = user;
+
       res.status(200).json({ status: "success", data: orthers });
     } catch (error) {
       let msg;
       if (error instanceof Error) {
         msg = error.message;
       }
+
       res.status(500).json({ status: "fail", msg });
     }
   }

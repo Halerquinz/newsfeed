@@ -1,12 +1,13 @@
 import React from "react";
 import { SingleUser } from "./user/SingleUser";
+import { formatNumber } from "../ultils/formatNumber";
 
 interface UserSummaryCardProps {
   onClick?: () => void;
   id?: string;
   username: string;
-  numFollowers?: number;
-  numFollowing?: number;
+  numFollowers: number;
+  numFollowing: number;
   profilePicture: string;
   about?: string;
   createdDate?: string;
@@ -47,11 +48,15 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
       </button>
       <div className="mt-3 flex">
         <div className="flex rounded-8 px-2 py-1 transition duration-200 ease-in-out hover:bg-primary-700">
-          <span className="font-bold text-primary-100">{numFollowers}</span>
+          <span className="font-bold text-primary-100">
+            {formatNumber(numFollowers)}
+          </span>
           <span className="ml-1.5 lowercase text-primary-300">followers</span>
         </div>
         <div className="flex rounded-8 px-2 py-1 transition duration-200 ease-in-out hover:bg-primary-700">
-          <span className="font-bold text-primary-100">{numFollowing}</span>
+          <span className="font-bold text-primary-100">
+            {formatNumber(numFollowing)}
+          </span>
           <span className="ml-1.5 lowercase text-primary-300">following</span>
         </div>
       </div>

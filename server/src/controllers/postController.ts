@@ -8,7 +8,7 @@ import { validationResult, param } from "express-validator";
 import { convertTZ, formatToDbDate } from "../ultil/convertTZ";
 
 interface PostRequest {
-  desc: string;
+  description: string;
   image: string;
 }
 
@@ -21,7 +21,7 @@ class PostController {
         .json({ status: "fail", msg: errors.array()[0].msg });
     }
     const postRequest: PostRequest = req.body;
-    const { desc, image } = postRequest;
+    const { description, image } = postRequest;
     const currentUserId = req.userId!;
     try {
       const userRepo: Repository<User> = await AppDataSource.getRepository(
@@ -39,7 +39,7 @@ class PostController {
         Post
       );
       const newPost: Post = await new Post();
-      newPost.description = desc;
+      newPost.description = description;
       newPost.image = image;
       newPost.user = user;
       await postRepo.save(newPost);

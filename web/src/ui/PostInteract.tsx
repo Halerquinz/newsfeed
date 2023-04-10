@@ -4,6 +4,7 @@ import SolidLike from "../icons/SolidLike";
 import { Button } from "./Button";
 import { useTokenStore } from "../modules/auth/useTokenStore";
 import { apiBaseUrl } from "../lib/tests/constants";
+import { formatNumber } from "../ultils/formatNumber";
 
 interface PostInteractProps {
   postId: number;
@@ -56,17 +57,25 @@ export const PostInteract: React.FC<PostInteractProps> = ({
   return (
     <div className="mt-3 flex">
       <div className="mr-10 flex items-center">
-        <Button onClick={handleLikeClick} size="tiny" color="transparent">
+        <Button
+          onClick={handleLikeClick}
+          size="tiny"
+          color={"transparent"}
+          transition={true}
+        >
           <SolidLike checked={checkStatus} />
         </Button>
         <div className="ml-3 font-bold text-primary-300">
-          {currentLikes.current}
+          {formatNumber(currentLikes.current)}
         </div>
       </div>
       <div className="mr-10 flex items-center">
-        <Button size="tiny" color="transparent">
-          <SolidComment />
-        </Button>
+        <Button
+          size="tiny"
+          color="transparent"
+          transition={true}
+          icon={<SolidComment />}
+        />
         <div className="ml-3 font-bold text-primary-300">{comments}</div>
       </div>
     </div>

@@ -12,6 +12,7 @@ import { Button } from "../../ui/Button";
 import { CenterLoader } from "../../ui/CenterLoader";
 import { apiBaseUrl } from "../../lib/tests/constants";
 import { useTokenStore } from "../auth/useTokenStore";
+import { CreatePostModal } from "./CreatePostModal";
 
 interface PostControllerProps {}
 
@@ -21,9 +22,8 @@ const Page: React.FC<{
   onLoadMore: (c: string) => void;
   isLastPage: boolean;
 }> = ({ cursor, limit, onLoadMore, isLastPage }) => {
-  const { data, isPreviousData } = useQuery<Data<PostsResponse>>({
+  const { data, isLoading } = useQuery<Data<PostsResponse>>({
     queryKey: ["/post", cursor, limit],
-    // staleTime: Infinity,
     staleTime: 1000,
     refetchOnMount: "always",
     refetchInterval: 10000,
@@ -50,14 +50,13 @@ const Page: React.FC<{
   // }, []);
   // console.log(data);
 
-  console.log(data?.data);
   if (!data) {
     return null;
   }
 
-  // if (isLoading) {
-  //   return <CenterLoader />;
-  // }
+  if (isLoading) {
+    return <CenterLoader />;
+  }
 
   return (
     <>
@@ -82,6 +81,7 @@ const Page: React.FC<{
 
 export const PostController: React.FC<PostControllerProps> = ({}) => {
   const [cursors, setCursors] = useState<string[]>([""]);
+  const [modal, setModal] = useState(false);
   const { conn } = useContext(AuthContext);
   const screenType = useScreenType();
 
@@ -97,7 +97,11 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
   return (
     <MiddlePanel
       stickyChildren={
-        <PostHeader title="Bảng tin" actionTitle="Tạo bài viết" />
+        <PostHeader
+          title="Bảng tin"
+          actionTitle="Tạo bài viết"
+          onActionClicked={() => setModal(true)}
+        />
       }
     >
       <div className={`flex flex-1 flex-col ${mb}`}>
@@ -113,6 +117,13 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
           ))}
         </div>
       </div>
+      {modal ? (
+        <CreatePostModal
+          onRequestClose={() => {
+            setModal(false);
+          }}
+        />
+      ) : null}
     </MiddlePanel>
   );
 };
