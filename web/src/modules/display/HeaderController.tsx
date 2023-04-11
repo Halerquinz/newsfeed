@@ -2,6 +2,7 @@ import React from "react";
 import Header from "next/head";
 import { NextPage } from "next";
 import { baseUrl } from "../../lib/tests/constants";
+
 export interface HeaderControllerProps {
   title?: string;
   embed?: { hexColor?: string; image?: string };

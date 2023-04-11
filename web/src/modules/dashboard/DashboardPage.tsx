@@ -10,12 +10,10 @@ interface DashboardPageProps {}
 
 export const DashboardPage: PageComponent<DashboardPageProps> = ({}) => {
   return (
-    <div>
-      <NoSSR>
-        <WaitForAuth>
-          <DefaultDesktopLayout>{<PostController />}</DefaultDesktopLayout>
-        </WaitForAuth>
-      </NoSSR>
-    </div>
+    <NoSSR>
+      <WaitForAuth>
+        <DefaultDesktopLayout>{<PostController />}</DefaultDesktopLayout>
+      </WaitForAuth>
+    </NoSSR>
   );
 };

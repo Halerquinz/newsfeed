@@ -22,6 +22,7 @@ const Page: React.FC<{
   onLoadMore: (c: string) => void;
   isLastPage: boolean;
 }> = ({ cursor, limit, onLoadMore, isLastPage }) => {
+  const { push } = useRouter();
   const { data, isLoading } = useQuery<Data<PostsResponse>>({
     queryKey: ["/post", cursor, limit],
     staleTime: 1000,
@@ -32,7 +33,6 @@ const Page: React.FC<{
   });
 
   // const { token } = useTokenStore.getState();
-  // const { push } = useRouter();
 
   // const [data, setData] = useState();
   // useEffect(() => {
@@ -61,7 +61,13 @@ const Page: React.FC<{
   return (
     <>
       {data?.data?.data?.map((post: Post) => (
-        <PostCard {...post} key={post.id} onClick={() => {}} />
+        <PostCard
+          {...post}
+          key={post.id}
+          onClick={() => {
+            push(`/post/${post.id}`);
+          }}
+        />
       ))}
       {isLastPage && data?.data.nextCursor ? (
         <div className={`flex justify-center py-5`}>

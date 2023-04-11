@@ -11,9 +11,9 @@ router.post(
   //   [body("desc").isEmpty().withMessage("body of post is empty")],
   postController.createPost
 );
-router.get("/get_posts", isAuth, postController.getPost);
-router.post("/like", isAuth, postController.likePost);
 router.get("/", isAuth, postController.getPosts);
+router.get("/get_post/:postId", isAuth, postController.getPost);
+// router.post("/like", isAuth, postController.likePost);
 router.get("/user/:userId", isAuth, postController.getPostsOfUser);
 // router.put('/:postId', isAuth, postController.updatePost)
 router.delete("/:postId", isAuth, postController.deletePost);

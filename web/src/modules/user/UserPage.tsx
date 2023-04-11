@@ -13,6 +13,7 @@ interface UserPageProps {
 }
 
 export const UserPage: PageComponent<UserPageProps> = ({ user, id }) => {
+  console.log(user);
   return (
     <>
       {user ? (

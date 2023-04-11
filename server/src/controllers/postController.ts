@@ -21,7 +21,8 @@ class PostController {
         .json({ status: "fail", msg: errors.array()[0].msg });
     }
     const postRequest: PostRequest = req.body;
-    const { description, image } = postRequest;
+    const image = req.file?.path!;
+    const { description } = postRequest;
     const currentUserId = req.userId!;
     try {
       const userRepo: Repository<User> = await AppDataSource.getRepository(
@@ -63,6 +64,7 @@ class PostController {
         relations: {
           user: true,
           likes: true,
+          comments: true,
         },
         where: {
           id: parseInt(postId),

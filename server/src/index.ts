@@ -48,6 +48,11 @@ app.use("/follow", followRoute);
 app.use("/post", postRoute);
 app.use("/chat", chatRoute);
 app.use("/message", messageRoute);
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 // app.use("/comment", commentRoute);
 app.get("/refresh_token", isAuth, async (req, res) => {
   if (req.userId) {

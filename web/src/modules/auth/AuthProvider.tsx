@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTokenStore } from "./useTokenStore";
 import { apiBaseUrl } from "../../lib/tests/constants";
-import { User } from "../../types/User";
+import { User } from "../../types/util-types";
 
 type V = { user: User | null } | null;
 
