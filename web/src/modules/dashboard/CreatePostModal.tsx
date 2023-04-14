@@ -29,6 +29,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
         initialValues={{ description: "", image: "" }}
         validationSchema={validationSchema}
         onSubmit={async ({ image, description }) => {
+          console.log(image);
           const res = await fetch(`${apiBaseUrl}/post/create-post`, {
             method: "POST",
             headers: {
@@ -59,6 +60,7 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
               placeholder={"Viết mô tả..."}
               textarea
             />
+            <InputField className={`rounded-8`} name="image" type="file" />
 
             <div
               className={`col-span-full flex w-full items-center space-x-3 pt-2`}

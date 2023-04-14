@@ -69,10 +69,10 @@ export type PostSummaryDetail = {
 };
 
 export type PostDetail = {
-  id: string;
+  id: number;
   userId: number;
-  likeCount: number;
-  commentCount: number;
+  likeCounts: number;
+  commentCounts: number;
   description: string;
   image: string;
   createdDate: string;

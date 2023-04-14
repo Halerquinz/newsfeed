@@ -53,7 +53,7 @@ app.use(
     extended: true,
   })
 );
-// app.use("/comment", commentRoute);
+app.use("/comment", commentRoute);
 app.get("/refresh_token", isAuth, async (req, res) => {
   if (req.userId) {
     const id = req.userId;
@@ -137,7 +137,6 @@ const startApp = async () => {
     console.log(error);
     console.log("Connect db fail");
   }
-  // await AppDataSource.getRepository("likes").delete({});
 };
 
 startApp();

@@ -13,9 +13,9 @@ router.post(
 );
 router.get("/", isAuth, postController.getPosts);
 router.get("/get_post/:postId", isAuth, postController.getPost);
-// router.post("/like", isAuth, postController.likePost);
+router.post("/like", isAuth, postController.likePost);
 router.get("/user/:userId", isAuth, postController.getPostsOfUser);
 // router.put('/:postId', isAuth, postController.updatePost)
-router.delete("/:postId", isAuth, postController.deletePost);
+// router.delete("/:postId", isAuth, postController.deletePost);
 
 export default router;

@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import { PostHeader } from "../../ui/PostHeader";
 import { MiddlePanel } from "../layouts/GridPanels";
 import { useRouter } from "next/router";
 import { PostCard } from "../../ui/PostCard";
@@ -13,6 +12,7 @@ import { CenterLoader } from "../../ui/CenterLoader";
 import { apiBaseUrl } from "../../lib/tests/constants";
 import { useTokenStore } from "../auth/useTokenStore";
 import { CreatePostModal } from "./CreatePostModal";
+import { PostHeading } from "../../ui/PostHeading";
 
 interface PostControllerProps {}
 
@@ -27,7 +27,7 @@ const Page: React.FC<{
     queryKey: ["/post", cursor, limit],
     staleTime: 1000,
     refetchOnMount: "always",
-    refetchInterval: 10000,
+    // refetchInterval: 10000,
     // Magic React Query
     cacheTime: 0,
   });
@@ -103,7 +103,7 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
   return (
     <MiddlePanel
       stickyChildren={
-        <PostHeader
+        <PostHeading
           title="Bảng tin"
           actionTitle="Tạo bài viết"
           onActionClicked={() => setModal(true)}

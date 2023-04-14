@@ -1,27 +1,34 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useScreenType } from "../../shared-hooks/useScreenType";
 import { CenterLoader } from "../../ui/CenterLoader";
 import { HeaderController } from "../display/HeaderController";
 import { MiddlePanel } from "../layouts/GridPanels";
 import { useGetPostByQueryParam } from "./useGetPostByQueryParam";
 import { AuthContext, AuthProvider } from "../auth/AuthProvider";
-import { PostDetail } from "../../types/util-types";
+import { Data, PostDetail } from "../../types/util-types";
+import { CreatePostModal } from "../dashboard/CreatePostModal";
+import { PostHeader } from "../../ui/PostHeader";
+import { PostCardImage } from "../../ui/PostCardImage";
 
 interface PostPanelControllerProps {
-  showMobileEditModal: boolean;
-  setShowMobileEditModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setPostData?: React.Dispatch<React.SetStateAction<PostDetail | undefined>>;
+  setPostData: React.Dispatch<
+    React.SetStateAction<Data<PostDetail> | undefined>
+  >;
 }
 
 export const PostPanelController: React.FC<PostPanelControllerProps> = ({
-  setRoomData,
-  showMobileEditModal,
-  setShowMobileEditModal,
+  setPostData,
 }) => {
   const { conn } = useContext(AuthContext);
   const [showEditModal, setShowEditModal] = useState(false);
   const { data, isLoading } = useGetPostByQueryParam();
   const screenType = useScreenType();
+
+  useEffect(() => {
+    if (data) {
+      setPostData(data);
+    }
+  }, [data]);
 
   if (isLoading) {
     return (
@@ -37,58 +44,32 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
     return null;
   }
 
-  const postCreator = data.user;
-  if (setRoomData) setRoomData(data);
+  const postCreator = data.data.user;
 
   return (
     <>
-      {showEditModal || showMobileEditModal ? (
-        <CreateRoomModal
-          onRequestClose={() => {
-            setShowEditModal(false);
-            setShowMobileEditModal(false);
-          }}
-          edit
-          data={{
-            name: data.room.name,
-            description: data.room.description || "",
-            privacy: data.room.isPrivate ? "private" : "public",
-          }}
-        />
-      ) : null}
-      <HeaderController embed={{}} title={data.room.name} />
+      <HeaderController title={data.data.description} />
       <MiddlePanel
         stickyChildren={
           screenType !== "fullscreen" ? (
-            <RoomHeader
-              onTitleClick={
-                data.room.creatorId === conn.user.id
-                  ? () => setShowEditModal(true)
-                  : undefined
-              }
-              title={data.room.name}
-              description={data.room.description || ""}
-              names={roomCreator ? [roomCreator.username] : []}
-            />
+            <>
+              <PostHeader
+                onTitleClick={
+                  data.data.userId === conn?.user?.id
+                    ? () => setShowEditModal(true)
+                    : undefined
+                }
+                title={data.data.description}
+                description={data.data.image || ""}
+                name={postCreator ? postCreator.username : ""}
+              />
+              <PostCardImage image={data.data.image} />
+            </>
           ) : (
             ""
           )
         }
-      >
-        <UserPreviewModal {...data} />
-        {screenType === "fullscreen" && open ? null : (
-          <RoomUsersPanel {...data} />
-        )}
-        <div
-          className={`sticky bottom-0 bg-primary-900 pb-7 ${
-            (screenType === "fullscreen" || screenType === "1-cols") && open
-              ? "flex-1"
-              : ""
-          }`}
-        >
-          <RoomPanelIconBarController {...data} />
-        </div>
-      </MiddlePanel>
+      ></MiddlePanel>
     </>
   );
 };

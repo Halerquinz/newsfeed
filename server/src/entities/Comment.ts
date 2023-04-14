@@ -6,19 +6,20 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from "typeorm";
 import { Post } from "./Post";
 import { User } from "./User";
 
 @Entity("comments")
 export class Comment extends BaseEntity {
-  @Column({ type: "int" })
-  value: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @PrimaryColumn()
+  @Column()
   postId: number;
 
-  @PrimaryColumn()
+  @Column()
   userId: number;
 
   @Column()
