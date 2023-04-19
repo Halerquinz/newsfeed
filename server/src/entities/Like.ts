@@ -14,9 +14,6 @@ import { User } from "./User";
 
 @Entity("likes")
 export class Like extends BaseEntity {
-  @Column({ type: "int" })
-  value: number;
-
   @PrimaryColumn()
   userId: number;
 

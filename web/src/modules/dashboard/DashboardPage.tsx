@@ -1,5 +1,3 @@
-import React, { useContext } from "react";
-import { isServer } from "../../lib/tests/isServer";
 import { PageComponent } from "../../types/PageComponent";
 import NoSSR from "../../ultils/noSSR";
 import { WaitForAuth } from "../auth/WaitForAuth";

@@ -9,6 +9,10 @@ import { Data, PostDetail } from "../../types/util-types";
 import { CreatePostModal } from "../dashboard/CreatePostModal";
 import { PostHeader } from "../../ui/PostHeader";
 import { PostCardImage } from "../../ui/PostCardImage";
+import { PostCard } from "../../ui/PostCard";
+import { PostComment } from "./comment/PostComment";
+import { PostCommentController } from "./comment/PostCommentController";
+import { PostCardWithComment } from "../../ui/PostCardWithComment";
 
 interface PostPanelControllerProps {
   setPostData: React.Dispatch<
@@ -49,27 +53,14 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
   return (
     <>
       <HeaderController title={data.data.description} />
-      <MiddlePanel
-        stickyChildren={
-          screenType !== "fullscreen" ? (
-            <>
-              <PostHeader
-                onTitleClick={
-                  data.data.userId === conn?.user?.id
-                    ? () => setShowEditModal(true)
-                    : undefined
-                }
-                title={data.data.description}
-                description={data.data.image || ""}
-                name={postCreator ? postCreator.username : ""}
-              />
-              <PostCardImage image={data.data.image} />
-            </>
-          ) : (
-            ""
-          )
-        }
-      ></MiddlePanel>
+      <MiddlePanel>
+        <div className={`flex flex-1 flex-col`}>
+          <PostCardWithComment
+            commentMap={data.data.comments}
+            {...data.data.post}
+          />
+        </div>
+      </MiddlePanel>
     </>
   );
 };

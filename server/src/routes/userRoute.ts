@@ -7,8 +7,8 @@ const router = Router();
 // username, email, phone, firstname, lastname, profilePicture, coverPicture, livesin, about
 router.get("/:userId", userController.getUser);
 router.get("/users/getProfile", isAuth, userController.getUsers);
-router.put(
-  "/:userId",
+router.post(
+  "/update/:userId",
   isAuth,
   [
     body("username")

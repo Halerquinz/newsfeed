@@ -33,7 +33,8 @@ export interface UserSummaryProfile {
 
 export type Data<T> = {
   status: "success" | "fail";
-  data: T;
+  data?: T;
+  msg?: string;
 };
 
 export interface Post {
@@ -49,7 +50,7 @@ export interface Post {
   profilePicture: string;
   likeCounts: number;
   commentCounts: number;
-  likeStatus: 1 | -1 | null;
+  likeStatus: number | null;
 }
 
 export interface PostsResponse {
@@ -69,15 +70,7 @@ export type PostSummaryDetail = {
 };
 
 export type PostDetail = {
-  id: number;
-  userId: number;
-  likeCounts: number;
-  commentCounts: number;
-  description: string;
-  image: string;
-  createdDate: string;
-  updatedDate: string;
-  user: User;
+  post: Post;
   likes: LikeDetail[];
   comments: CommentDetail[];
 };
@@ -88,6 +81,8 @@ export interface LikeDetail {
   postId: number;
   createdDate: string;
   updatedDate: string;
+  username: string;
+  profilePicture: string;
 }
 
 export interface CommentDetail {
@@ -96,4 +91,6 @@ export interface CommentDetail {
   createdDate: string;
   updatedDate: string;
   text: string;
+  username: string;
+  profilePicture: string;
 }

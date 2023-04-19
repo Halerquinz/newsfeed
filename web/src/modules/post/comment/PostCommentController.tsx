@@ -9,8 +9,8 @@ interface PostCommentControllerProps {
 export const PostCommentController: React.FC<PostCommentControllerProps> = ({
   data,
 }) => {
-  if (!data) {
+  if (!data || data.status === "fail") {
     return null;
   }
-  return <PostComment {...data} />;
+  return <PostComment commentMap={data.data.comments} post={data.data.post} />;
 };

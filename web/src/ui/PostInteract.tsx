@@ -10,7 +10,7 @@ interface PostInteractProps {
   postId: number;
   likes: number;
   comments: number;
-  likeStatus: 1 | -1 | null;
+  likeStatus: number | null;
 }
 
 export const PostInteract: React.FC<PostInteractProps> = ({
@@ -20,7 +20,7 @@ export const PostInteract: React.FC<PostInteractProps> = ({
   likeStatus,
 }) => {
   let checked = false;
-  if (likeStatus === 1) {
+  if (likeStatus !== null) {
     checked = true;
   }
 
@@ -37,7 +37,16 @@ export const PostInteract: React.FC<PostInteractProps> = ({
 
   const handleLikeClick = async (e: React.SyntheticEvent<EventTarget>) => {
     e.stopPropagation();
-    await fetch(`${apiBaseUrl}/post/like`, {
+    let likeOrUnlike = "like";
+
+    if (checkStatus) {
+      currentLikes.current -= 1;
+      likeOrUnlike = "unlike";
+    } else {
+      currentLikes.current += 1;
+    }
+
+    await fetch(`${apiBaseUrl}/post/${likeOrUnlike}`, {
       method: "POST",
       headers: {
         authorization: `beared ${token}`,
@@ -45,17 +54,11 @@ export const PostInteract: React.FC<PostInteractProps> = ({
       } as any,
     });
 
-    if (checkStatus) {
-      currentLikes.current -= 1;
-    } else {
-      currentLikes.current += 1;
-    }
-
     setCheckStatus(!checkStatus);
   };
 
   return (
-    <div className="mt-3 flex">
+    <>
       <div className="mr-10 flex items-center">
         <Button
           onClick={handleLikeClick}
@@ -78,6 +81,6 @@ export const PostInteract: React.FC<PostInteractProps> = ({
         />
         <div className="ml-3 font-bold text-primary-300">{comments}</div>
       </div>
-    </div>
+    </>
   );
 };

@@ -13,16 +13,26 @@ class CommentController {
   async addComment(req: Request, res: Response) {
     try {
       const userId = req.userId;
-      const postId = req.get("postId");
-      const comment = req.get("comment");
-      const commentRepo: Repository<Comment> =
-        await AppDataSource.getRepository(Comment);
-      const newComment: Comment = await new Comment();
-      newComment.postId = Number(postId)!;
-      newComment.userId = Number(userId)!;
-      newComment.text = comment!;
-      await newComment.save();
-      res.status(201).json({ status: "success", data: newComment });
+      const postId = req.body.postId;
+      const comment = req.body.comment;
+      // const commentRepo: Repository<Comment> =
+      //   await AppDataSource.getRepository(Comment);
+      // const newComment: Comment = await new Comment();
+      // newComment.postId = Number(postId)!;
+      // newComment.userId = Number(userId)!;
+      // newComment.text = comment!;
+      // await newComment.save();
+      const firstQuery = `insert into comments(postId, userId, text) values(${postId}, ${userId}, "${comment}")`;
+      const secondQuery = `
+        update posts
+        set commentCounts = commentCounts + 1
+        where id = ${postId}
+      `;
+      await AppDataSource.transaction(async (tm) => {
+        await tm.query(firstQuery);
+        await tm.query(secondQuery);
+      });
+      res.status(200).json({ status: "success", data: true });
     } catch (error) {
       let msg;
       if (error instanceof Error) {
@@ -56,18 +66,23 @@ class CommentController {
   async getComments(req: Request, res: Response) {
     const postId = req.params.postId;
     try {
-      const commentRepo: Repository<Comment> =
-        await AppDataSource.getRepository(Comment);
+      const queryString = `
+      select c.*, u.username, u.firstname, u.lastname, u.profilePicture from comments c inner join users u on u.id = c.userId where postId = ${postId}
+      `;
+      const comments = await AppDataSource.query(queryString);
+      console.log(comments);
+      // const commentRepo: Repository<Comment> =
+      //   await AppDataSource.getRepository(Comment);
 
-      const comments: Comment[] = await commentRepo.find({
-        where: { postId: parseInt(postId) },
-      });
-      if (comments.length === 0) {
-        return res.status(200).json({
-          status: "no data",
-          msg: "Be the first to comment on this post",
-        });
-      }
+      // const comments: Comment[] = await commentRepo.find({
+      //   where: { postId: parseInt(postId) },
+      // });
+      // if (comments.length === 0) {
+      //   return res.status(200).json({
+      //     status: "no data",
+      //     msg: "Be the first to comment on this post",
+      //   });
+      // }
       res.status(200).json({ status: "success", data: comments });
     } catch (error) {
       let msg;

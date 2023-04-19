@@ -1,11 +1,13 @@
 import React from "react";
 import { apiBaseUrl } from "../../lib/tests/constants";
 import { PageComponent } from "../../types/PageComponent";
-import { User } from "../../types/User";
 import { HeaderController } from "../display/HeaderController";
 import { DefaultDesktopLayout } from "../layouts/DefaultDesktopLayout";
 import NoSSR from "../../ultils/noSSR";
 import { ProfileHeader } from "../../ui/ProfileHeader";
+import { User } from "../../types/util-types";
+import { MiddlePanel } from "../layouts/GridPanels";
+import { UserProfileController } from "./UserProfileController";
 
 interface UserPageProps {
   user: User | null;
@@ -13,7 +15,6 @@ interface UserPageProps {
 }
 
 export const UserPage: PageComponent<UserPageProps> = ({ user, id }) => {
-  console.log(user);
   return (
     <>
       {user ? (
@@ -25,10 +26,13 @@ export const UserPage: PageComponent<UserPageProps> = ({ user, id }) => {
       ) : (
         <HeaderController />
       )}
-      {/* <NoSSR>
-        <DefaultDesktopLayout></DefaultDesktopLayout>
-      </NoSSR> */}
-      <ProfileHeader />
+      <NoSSR>
+        <DefaultDesktopLayout>
+          <MiddlePanel>
+            <UserProfileController key={id as any} />
+          </MiddlePanel>
+        </DefaultDesktopLayout>
+      </NoSSR>
     </>
   );
 };

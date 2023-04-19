@@ -1,54 +1,36 @@
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { useScreenType } from "../../shared-hooks/useScreenType";
-import { Data, Post, PostsResponse } from "../../types/util-types";
-import { Button } from "../../ui/Button";
-import { CenterLoader } from "../../ui/CenterLoader";
-import { PostCard } from "../../ui/PostCard";
-import { PostHeading } from "../../ui/PostHeading";
-import { AuthContext } from "../auth/AuthProvider";
-import { MiddlePanel } from "../layouts/GridPanels";
-import { CreatePostModal } from "./CreatePostModal";
-import { isServer } from "../../lib/tests/isServer";
+import { AuthContext } from "../modules/auth/AuthProvider";
+import { CreatePostModal } from "../modules/dashboard/CreatePostModal";
+import { MiddlePanel } from "../modules/layouts/GridPanels";
+import { useScreenType } from "../shared-hooks/useScreenType";
+import { Data, PostsResponse, Post } from "../types/util-types";
+import { Button } from "./Button";
+import { CenterLoader } from "./CenterLoader";
+import { PostCard } from "./PostCard";
 
-interface PostControllerProps {}
+interface ProfileFeedProps extends React.HtmlHTMLAttributes<HTMLDivElement> {
+  currentUserId: number;
+}
 
 const Page: React.FC<{
   cursor: string;
   limit: number;
   onLoadMore: (c: string) => void;
   isLastPage: boolean;
-}> = ({ cursor, limit, onLoadMore, isLastPage }) => {
+  currentUserId: number;
+}> = ({ cursor, limit, currentUserId, onLoadMore, isLastPage }) => {
   const { push } = useRouter();
   const { data, isLoading } = useQuery<Data<PostsResponse>>({
-    queryKey: ["/post", cursor, limit],
+    queryKey: ["/post/get-posts/user", cursor, limit, currentUserId],
     staleTime: Infinity,
-    enabled: !isServer,
     refetchOnMount: "always",
     refetchInterval: 10000,
     // Magic React Query
   });
 
   const { setQueryData } = useQueryClient();
-
-  // const { token } = useTokenStore.getState();
-
-  // const [data, setData] = useState();
-  // useEffect(() => {
-  //   fetch(`${apiBaseUrl}/post`, {
-  //     headers: {
-  //       authorization: `beared ${token}`,
-  //       cursor,
-  //       limit,
-  //     } as any,
-  //   }).then((res) => {
-  //     res.json().then((data) => {
-  //       setData(data);
-  //     });
-  //   });
-  // }, []);
-  // console.log(data);
 
   if (!data) {
     return null;
@@ -85,7 +67,10 @@ const Page: React.FC<{
   );
 };
 
-export const PostController: React.FC<PostControllerProps> = ({}) => {
+export const ProfileFeed: React.FC<ProfileFeedProps> = ({
+  currentUserId,
+  className,
+}) => {
   const [cursors, setCursors] = useState<string[]>([""]);
   const [modal, setModal] = useState(false);
   const { conn } = useContext(AuthContext);
@@ -101,15 +86,7 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
   }
 
   return (
-    <MiddlePanel
-      stickyChildren={
-        <PostHeading
-          title="Bảng tin"
-          actionTitle="Tạo bài viết"
-          onActionClicked={() => setModal(true)}
-        />
-      }
-    >
+    <div className={`mt-2 flex w-full flex-1 flex-col ${className}`}>
       <div className={`flex flex-1 flex-col ${mb}`}>
         <div className="flex flex-col space-y-4">
           {cursors.map((cursor, i) => (
@@ -119,6 +96,7 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
               cursor={cursor}
               onLoadMore={(c) => setCursors([...cursors, c])}
               isLastPage={i === cursors.length - 1}
+              currentUserId={currentUserId}
             />
           ))}
         </div>
@@ -130,6 +108,6 @@ export const PostController: React.FC<PostControllerProps> = ({}) => {
           }}
         />
       ) : null}
-    </MiddlePanel>
+    </div>
   );
 };

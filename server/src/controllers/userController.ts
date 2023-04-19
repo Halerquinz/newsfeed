@@ -1,7 +1,7 @@
 import { AppDataSource } from "../configs/db";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import { User } from "../entities/User";
+import { Sex, User } from "../entities/User";
 import { Repository } from "typeorm";
 // import { Follow } from '../entities/Follow';
 import { validationResult, param } from "express-validator";
@@ -17,6 +17,7 @@ interface UserRequest {
   coverPicture: string;
   livesin: string;
   about: string;
+  sex: Sex;
 }
 
 class UserController {
@@ -71,7 +72,6 @@ class UserController {
     }
     const userRequest: UserRequest = req.body;
     const {
-      username,
       email,
       phone,
       firstname,
@@ -80,9 +80,10 @@ class UserController {
       coverPicture,
       livesin,
       about,
+      sex,
     } = userRequest;
-    const currentUserId = req.userId!;
-    const id = req.params.userId;
+    const currentUserId = Number(req.userId!);
+    const id = Number(req.params.userId);
     try {
       if (id !== currentUserId) {
         return res
@@ -93,12 +94,11 @@ class UserController {
         User
       );
       const user: User | null = await userRepo.findOne({
-        where: { id: parseInt(id) },
+        where: { id },
       });
       if (!user) {
         return res.status(400).json({ status: "fail", msg: "User not found" });
       }
-      user.username = username;
       user.email = email;
       user.phone = phone;
       user.firstname = firstname;
@@ -107,6 +107,7 @@ class UserController {
       user.coverPicture = coverPicture;
       user.livesin = livesin;
       user.about = about;
+      user.sex = sex;
       await userRepo.save(user);
       return res.status(200).json({ status: "success", data: user });
     } catch (error) {

@@ -17,6 +17,15 @@ export const defaultQueryFn = async ({ queryKey }: { queryKey: queryKey }) => {
       cursor: queryKey[1],
       limit: queryKey[2],
     };
+
+    if (queryKey.length === 4) {
+      headersRequest = {
+        authorization: `bearer ${token}`,
+        cursor: queryKey[1],
+        limit: queryKey[2],
+        userId: queryKey[3],
+      };
+    }
   }
 
   const res = await fetch(`${apiBaseUrl}${key}`, {

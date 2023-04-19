@@ -7,8 +7,12 @@ import { PostCardLeft } from "./PostCardLeft";
 import { PostCardRight } from "./PostCardRight";
 import { PostInteract } from "./PostInteract";
 import { convertTZ } from "../ultils/convertTZ";
+import { apiBaseUrl } from "../lib/tests/constants";
+import { useTokenStore } from "../modules/auth/useTokenStore";
+import { CommentDetail } from "../types/util-types";
+import { PostComment } from "../modules/post/comment/PostComment";
 
-interface PostCardProps {
+interface PostCardWithCommentProps {
   id: number;
   profilePicture: string;
   firstname: string;
@@ -21,9 +25,10 @@ interface PostCardProps {
   likeCounts: number;
   commentCounts: number;
   likeStatus: number | null;
+  commentMap: CommentDetail[];
 }
 
-export const PostCard: React.FC<PostCardProps> = ({
+export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
   id,
   createdDate,
   firstname,
@@ -36,11 +41,12 @@ export const PostCard: React.FC<PostCardProps> = ({
   likeCounts,
   commentCounts,
   likeStatus,
+  commentMap,
 }) => {
   return (
     <div
       onClick={onClick}
-      className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out hover:bg-primary-700"
+      className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out "
     >
       <PostCardLeft>{<PostCardAvatar avatar={profilePicture} />}</PostCardLeft>
       <PostCardRight
@@ -60,6 +66,9 @@ export const PostCard: React.FC<PostCardProps> = ({
             likes={likeCounts}
             likeStatus={likeStatus}
           />
+        }
+        comment={
+          commentMap && <PostComment commentMap={commentMap} postId={id} />
         }
       />
     </div>

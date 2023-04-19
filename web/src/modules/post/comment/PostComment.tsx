@@ -1,18 +1,25 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { PostCommentInput } from "./PostCommentInput";
-import { PostDetail } from "../../../types/util-types";
+import { CommentDetail, Post, PostDetail } from "../../../types/util-types";
+import { PostCommentList } from "./PostCommentList";
+import { useGetPostComments } from "../../../shared-hooks/useGetPostComments";
 
 interface PostCommentProps {
-  data: PostDetail;
+  commentMap: CommentDetail[];
+  postId: number;
 }
 
-export const PostComment: React.FC<PostCommentProps> = ({ data }) => {
+export const PostComment: React.FC<PostCommentProps> = ({
+  commentMap,
+  postId,
+}) => {
   return (
     <div
-      className={`flex h-full w-full flex-1 overflow-y-auto rounded-8 bg-primary-900 md:mb-7 md:bg-primary-800`}
+      className={`flex h-full w-full flex-1 overflow-y-auto rounded-8 bg-primary-900 md:bg-primary-800`}
     >
-      <div className={`flex w-full flex-1 flex-col md:mt-4`}>
-        <PostCommentInput postId={data.id} />
+      <div className={`flex w-full flex-1 flex-col`}>
+        <PostCommentInput postId={postId} />
+        <PostCommentList commentMap={commentMap} />
       </div>
     </div>
   );

@@ -1,24 +1,18 @@
-import { useQuery } from "react-query";
-import { PageComponent } from "../../types/PageComponent";
-import { PostOpenGraphPreview } from "./PostOpenGraphPreview";
-import { WaitForAuth } from "../auth/WaitForAuth";
-import NoSSR from "../../ultils/noSSR";
-import { MainLayout } from "../layouts/MainLayout";
-import { AvailableUser } from "../../ui/AvailableUser";
-import { AvailableUserController } from "../dashboard/AvailableUserController";
-import { useRouter } from "next/router";
-import { useGetPostByQueryParam } from "./useGetPostByQueryParam";
 import { useState } from "react";
-import { PostPanelController } from "./PostPanelController";
+import { PageComponent } from "../../types/PageComponent";
 import { Data, PostDetail } from "../../types/util-types";
+import NoSSR from "../../ultils/noSSR";
+import { WaitForAuth } from "../auth/WaitForAuth";
+import { AvailableUserController } from "../dashboard/AvailableUserController";
+import { MainLayout } from "../layouts/MainLayout";
+import { PostOpenGraphPreview } from "./PostOpenGraphPreview";
+import { PostPanelController } from "./PostPanelController";
 import { PostCommentController } from "./comment/PostCommentController";
-import { PostComment } from "./comment/PostComment";
+import { ProfileBlockController } from "../dashboard/ProfileBlockController";
 
-interface PostPageProps {
-  id?: string | string[] | undefined;
-}
+interface PostPageProps {}
 
-export const PostPage: PageComponent<PostPageProps> = ({ id }) => {
+export const PostPage: PageComponent<PostPageProps> = ({}) => {
   const [postData, setPostData] = useState(
     undefined as Data<PostDetail> | undefined
   );
@@ -29,7 +23,7 @@ export const PostPage: PageComponent<PostPageProps> = ({ id }) => {
         <WaitForAuth>
           <MainLayout
             leftPanel={<AvailableUserController />}
-            rightPanel={<PostCommentController data={postData!} />}
+            rightPanel={<ProfileBlockController />}
           >
             <PostPanelController setPostData={setPostData} />
           </MainLayout>
