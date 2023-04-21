@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { Modal } from "../../ui/Modal";
 import { Form, Formik } from "formik";
 import { InputField } from "../../form-fields/InputField";
@@ -8,6 +8,11 @@ import { AvailableUser } from "../../ui/AvailableUser";
 import { apiBaseUrl } from "../../lib/tests/constants";
 import { useTokenStore } from "../auth/useTokenStore";
 import * as yup from "yup";
+import { useMutation } from "react-query";
+import { usePrefetchQuery } from "../../shared-hooks/usePrefetchQuery";
+import { useUpdateQuery } from "../../shared-hooks/useUpdateQuery";
+import { useRouter } from "next/router";
+import { queryClient } from "../../lib/tests/queryClient";
 
 interface CreatePostModalProps {
   onRequestClose: () => void;
@@ -23,23 +28,38 @@ export const CreatePostModal: React.FC<CreatePostModalProps> = ({
   const { conn } = useContext(AuthContext);
   const { token } = useTokenStore.getState();
 
+  const createNewPost = useCallback(
+    async (data: { image: string; description: string }) => {
+      const res = await fetch(`${apiBaseUrl}/post/create-post`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `beared ${token}`,
+        },
+        body: JSON.stringify({
+          image: data.image,
+          description: data.description.trim(),
+        }),
+      });
+      return await res.json();
+    },
+    [conn]
+  );
+
+  const { mutateAsync: createPost } = useMutation(createNewPost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("/post");
+    },
+  });
+
   return (
     <Modal isOpen ariaHideApp={false} onRequestClose={onRequestClose}>
       <Formik
         initialValues={{ description: "", image: "" }}
         validationSchema={validationSchema}
-        onSubmit={async ({ image, description }) => {
-          console.log(image);
-          const res = await fetch(`${apiBaseUrl}/post/create-post`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              authorization: `beared ${token}`,
-            },
-            body: JSON.stringify({ image, description: description.trim() }),
-          });
-          const data = await res.json();
-          if (data.status === "success") {
+        onSubmit={async (data) => {
+          const res = await createPost(data);
+          if (res.status === "success") {
             onRequestClose();
           }
         }}

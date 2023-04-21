@@ -63,7 +63,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     [conn]
   );
 
-  const { mutateAsync } = useMutation(updateUserProfile);
+  const { mutateAsync: editProfile } = useMutation(updateUserProfile);
 
   if (!conn) {
     return null;
@@ -97,7 +97,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           //   });
           // }}
           onSubmit={async (data) => {
-            const res = await mutateAsync(data as any);
+            const res = await editProfile(data as any);
             if (res.status === "success") {
               if (conn) {
                 setConn({ user: { ...conn?.user, ...(data as any) } });

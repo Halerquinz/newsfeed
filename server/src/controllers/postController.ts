@@ -353,7 +353,7 @@ class PostController {
 
   async updatePost(req: Request, res: Response) {
     const postRequest: PostRequest = req.body;
-    const { desc, image } = postRequest;
+    const { description, image } = postRequest;
     const currentUserId = req.userId!;
     const postId = req.params.postId;
     try {
@@ -386,7 +386,7 @@ class PostController {
           .status(200)
           .json({ status: "fail", msg: "Acttion forbidden" });
       }
-      post.description = desc;
+      post.description = description;
       post.image = image;
       await postRepo.save(post);
       res.status(200).json({ status: "success", data: post });

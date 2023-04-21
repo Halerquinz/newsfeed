@@ -11,6 +11,7 @@ import { AuthContext } from "../auth/AuthProvider";
 import { MiddlePanel } from "../layouts/GridPanels";
 import { CreatePostModal } from "./CreatePostModal";
 import { isServer } from "../../lib/tests/isServer";
+import { useUpdateQuery } from "../../shared-hooks/useUpdateQuery";
 
 interface PostControllerProps {}
 
@@ -31,24 +32,6 @@ const Page: React.FC<{
   });
 
   const { setQueryData } = useQueryClient();
-
-  // const { token } = useTokenStore.getState();
-
-  // const [data, setData] = useState();
-  // useEffect(() => {
-  //   fetch(`${apiBaseUrl}/post`, {
-  //     headers: {
-  //       authorization: `beared ${token}`,
-  //       cursor,
-  //       limit,
-  //     } as any,
-  //   }).then((res) => {
-  //     res.json().then((data) => {
-  //       setData(data);
-  //     });
-  //   });
-  // }, []);
-  // console.log(data);
 
   if (!data) {
     return null;
@@ -85,10 +68,11 @@ const Page: React.FC<{
   );
 };
 
-export const PostController: React.FC<PostControllerProps> = ({}) => {
+export const PostController: React.FC<PostControllerProps> = () => {
   const [cursors, setCursors] = useState<string[]>([""]);
   const [modal, setModal] = useState(false);
   const { conn } = useContext(AuthContext);
+  const update = useUpdateQuery();
   const screenType = useScreenType();
 
   let mb = "mb-7";

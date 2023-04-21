@@ -52,7 +52,7 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
 
   return (
     <>
-      <HeaderController title={data.data.description} />
+      <HeaderController title={data?.data?.description} />
       <MiddlePanel>
         <div className={`flex flex-1 flex-col`}>
           <PostCardWithComment
