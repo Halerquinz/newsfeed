@@ -30,6 +30,7 @@ const Page: React.FC<{
     // Magic React Query
   });
 
+  console.log(data);
   const { setQueryData } = useQueryClient();
 
   if (!data) {
@@ -72,7 +73,6 @@ export const ProfileFeed: React.FC<ProfileFeedProps> = ({
   className,
 }) => {
   const [cursors, setCursors] = useState<string[]>([""]);
-  const [modal, setModal] = useState(false);
   const { conn } = useContext(AuthContext);
   const screenType = useScreenType();
 
@@ -101,13 +101,6 @@ export const ProfileFeed: React.FC<ProfileFeedProps> = ({
           ))}
         </div>
       </div>
-      {modal ? (
-        <CreatePostModal
-          onRequestClose={() => {
-            setModal(false);
-          }}
-        />
-      ) : null}
     </div>
   );
 };

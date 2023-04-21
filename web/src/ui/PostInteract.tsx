@@ -44,6 +44,7 @@ export const PostInteract: React.FC<PostInteractProps> = ({
     onSuccess: () => {
       queryClient.invalidateQueries("/post");
       queryClient.invalidateQueries(`/post/get_post/${postId}`);
+      queryClient.invalidateQueries(`/post/get-posts/user`);
     },
   });
 

@@ -268,6 +268,7 @@ class PostController {
 
   async getPostsOfUser(req: Request, res: Response) {
     try {
+      const currentUserId = req.userId;
       const userId = Number(req.get("userId"));
       let cursor = req.get("cursor");
       const limit = Number(req.get("limit"));
@@ -278,7 +279,7 @@ class PostController {
 
       const queryString = `
       select p.*, u.username, u.firstname, u.lastname, u.profilePicture,
-      (select userId from likes where userId = ${userId} and postId = p.id) likeStatus
+      (select userId from likes where userId = ${currentUserId} and postId = p.id) likeStatus
       from posts p
       inner join users u on u.id = p.userId
       ${
