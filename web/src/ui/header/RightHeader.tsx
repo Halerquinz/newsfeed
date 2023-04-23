@@ -54,12 +54,12 @@ export const RightHeader: React.FC<RightHeaderProps> = ({
         zIndex={10}
         className="fixed top-9 right-3 md:right-0"
         innerClassName="fixed transform -translate-x-full"
-        overlay={() => (
+        overlay={(close) => (
           <SettingsDropdown
             onActionButtonClicked={() => {
               useTokenStore.getState().setToken({ token: "" });
             }}
-            // onCloseDropdown={close}
+            onCloseDropdown={close}
           />
         )}
       >

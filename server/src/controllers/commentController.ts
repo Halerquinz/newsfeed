@@ -123,6 +123,7 @@ class CommentController {
 
   async deleteComment(req: Request, res: Response) {
     const commentId = req.params.commentId;
+    const postId = req.get("postId");
     try {
       const commentRepo: Repository<Comment> =
         await AppDataSource.getRepository(Comment);
@@ -136,7 +137,18 @@ class CommentController {
           .status(400)
           .json({ status: "fail", msg: "Comment not found" });
       }
-      res.status(200).json({ status: "success", data: comment });
+      const firstQuery = `
+        delete from comments where id = ${parseInt(commentId)}
+      `;
+      const secondQuery = `
+      update posts set commentCounts = commentCounts - 1 where id = ${postId}
+      `;
+      console.log(secondQuery);
+      await AppDataSource.transaction(async (tm) => {
+        await tm.query(firstQuery);
+        await tm.query(secondQuery);
+      });
+      res.status(200).json({ status: "success", data: true });
     } catch (error) {
       let msg;
       if (error instanceof Error) {

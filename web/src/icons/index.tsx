@@ -11,3 +11,5 @@ export { default as MacCloseIcon } from "./MacCloseIcon";
 export { default as SolidPersonAdd } from "./SolidPersonAdd";
 export { default as SolidPlus } from "./SolidPlus";
 export { default as SolidCaretRight } from "./SolidCaretRight";
+export { default as SolidEllipsis } from "./SolidEllipsis";
+export { default as SolidDelete } from "./SolidDelete";

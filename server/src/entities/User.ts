@@ -68,6 +68,12 @@ export class User extends BaseEntity {
   @Column({ type: "enum", enum: Sex })
   sex: Sex;
 
+  @Column({ default: 0 })
+  followingCount: number;
+
+  @Column({ default: 0 })
+  followerCount: number;
+
   @Column()
   dateOfBirth: String;
 

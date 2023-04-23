@@ -86,6 +86,7 @@ export interface LikeDetail {
 }
 
 export interface CommentDetail {
+  id: number;
   userId: number;
   postId: number;
   createdDate: string;

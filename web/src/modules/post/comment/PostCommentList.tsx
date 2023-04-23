@@ -4,18 +4,18 @@ import { CommentCard } from "../../../ui/CommentCard";
 
 interface PostCommentListProps {
   commentMap?: CommentDetail[];
+  postCreatorId: number;
 }
 
 export const PostCommentList: React.FC<PostCommentListProps> = ({
   commentMap,
+  postCreatorId,
 }) => {
   return (
-    <div
-      className={`flex flex-1 flex-col overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-primary-700`}
-    >
+    <div className={`flex flex-1 flex-col overflow-visible`}>
       {commentMap &&
         commentMap.map((comment: CommentDetail, idx) => (
-          <CommentCard key={idx} {...comment} />
+          <CommentCard key={idx} {...comment} postCreatorId={postCreatorId} />
         ))}
     </div>
   );

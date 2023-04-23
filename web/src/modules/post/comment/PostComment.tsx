@@ -7,19 +7,24 @@ import { useGetPostComments } from "../../../shared-hooks/useGetPostComments";
 interface PostCommentProps {
   commentMap: CommentDetail[];
   postId: number;
+  postCreatorId: number;
 }
 
 export const PostComment: React.FC<PostCommentProps> = ({
   commentMap,
   postId,
+  postCreatorId,
 }) => {
   return (
     <div
-      className={`flex h-full w-full flex-1 overflow-y-auto rounded-8 bg-primary-900 md:bg-primary-800`}
+      className={`flex h-full w-full flex-1 rounded-8 bg-primary-900 md:bg-primary-800`}
     >
       <div className={`flex w-full flex-1 flex-col`}>
         <PostCommentInput postId={postId} />
-        <PostCommentList commentMap={commentMap} />
+        <PostCommentList
+          commentMap={commentMap}
+          postCreatorId={postCreatorId}
+        />
       </div>
     </div>
   );

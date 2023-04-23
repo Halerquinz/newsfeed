@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import { PostCardAvatar } from "./PostCardAvatar";
 import { PostCardDesc } from "./PostCardDesc";
 import { PostCardHeading } from "./PostCardHeading";
@@ -7,9 +7,19 @@ import { PostCardLeft } from "./PostCardLeft";
 import { PostCardRight } from "./PostCardRight";
 import { PostInteract } from "./PostInteract";
 import { convertTZ } from "../ultils/convertTZ";
+import { useTokenStore } from "../modules/auth/useTokenStore";
+import { DropdownController } from "./DropdownController";
+import { PostDropdown } from "./PostDropdown";
+import { AuthContext } from "../modules/auth/AuthProvider";
+import { useMutation } from "react-query";
+import { SolidEllipsis } from "../icons";
+import { apiBaseUrl } from "../lib/tests/constants";
+import { User } from "../types/util-types";
+import { queryClient } from "../lib/tests/queryClient";
 
 interface PostCardProps {
   id: number;
+  userId: number;
   profilePicture: string;
   firstname: string;
   lastname: string;
@@ -25,6 +35,7 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({
   id,
+  userId: creatorId,
   createdDate,
   firstname,
   lastname,
@@ -37,10 +48,33 @@ export const PostCard: React.FC<PostCardProps> = ({
   commentCounts,
   likeStatus,
 }) => {
+  const { conn } = useContext(AuthContext);
+  const { token } = useTokenStore.getState();
+  const currentUserId = conn?.user?.id;
+
+  const deletePost = useCallback(async () => {
+    const res = await fetch(`${apiBaseUrl}/post/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${token}`,
+      },
+      method: "DELETE",
+    });
+    return await res.json();
+  }, [id]);
+
+  const { mutateAsync } = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("/post");
+      queryClient.invalidateQueries(`/post/get_post/${id}`);
+      queryClient.invalidateQueries(`/post/get-posts/user`);
+    },
+  });
+
   return (
     <div
       onClick={onClick}
-      className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out hover:bg-primary-700"
+      className="relative flex w-full cursor-pointer rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out"
     >
       <PostCardLeft>{<PostCardAvatar avatar={profilePicture} />}</PostCardLeft>
       <PostCardRight
@@ -62,6 +96,22 @@ export const PostCard: React.FC<PostCardProps> = ({
           />
         }
       />
+      <DropdownController
+        className="absolute right-3 md:right-0"
+        innerClassName="absolute transform -translate-x-full"
+        overlay={(close) => (
+          <PostDropdown
+            onDeletePost={async (e: React.SyntheticEvent<EventTarget>) => {
+              e.stopPropagation();
+              await mutateAsync();
+            }}
+            onCloseDropdown={close}
+            creatorId={creatorId}
+          />
+        )}
+      >
+        <SolidEllipsis />
+      </DropdownController>
     </div>
   );
 };

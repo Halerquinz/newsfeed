@@ -74,7 +74,7 @@ class PostController {
       //   where: { postId: parseInt(postId) },
       // });
       const getPostQuery = `select p.*, u.username, u.firstname, u.lastname, u.profilePicture, (select userId from likes where userId = ${userId} and postId = p.id) likeStatus from posts p inner join users u on p.id = ${postId} and u.id = p.userId`;
-      const getCommentQuery = `select c.text, c.userId, c.postId, c.createdDate, c.updatedDate, u.username, u.profilePicture from comments c inner join users u on c.userId = u.id where c.postId = ${postId} order by c.createdDate desc`;
+      const getCommentQuery = `select c.id, c.text, c.userId, c.postId, c.createdDate, c.updatedDate, u.username, u.profilePicture from comments c inner join users u on c.userId = u.id where c.postId = ${postId} order by c.createdDate desc`;
       const getLikeQuery = `select l.*,  u.username, u.profilePicture from likes l inner join users u on l.userId = u.id where l.postId = ${postId}`;
 
       const post = await AppDataSource.query(getPostQuery);

@@ -7,6 +7,7 @@ export const useGetPostByQueryParam = () => {
 
   const postId = typeof query.id === "string" ? query.id : "";
   const { data, isLoading } = useQuery<Data<PostDetail>>({
+    staleTime: Infinity,
     queryKey: `/post/get_post/${postId}`,
     enabled: postId !== "",
     refetchOnMount: true,

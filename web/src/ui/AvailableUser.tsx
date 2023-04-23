@@ -7,6 +7,7 @@ interface AvailableUserType {
   lastname: string;
   profilePicture: string;
   username: string;
+  id: number;
 }
 
 export const AvailableUser: React.FC<AvailableUserType> = ({
@@ -14,11 +15,12 @@ export const AvailableUser: React.FC<AvailableUserType> = ({
   lastname,
   profilePicture,
   username,
+  id,
 }) => (
   <div className="flex w-full py-3">
     <SingleUser size="sm" src={profilePicture} username={username} />
     <div className="ml-3 flex flex-col justify-center overflow-hidden">
-      <Link href={"/"}>
+      <Link href={`/u/${id}`}>
         <h5 className="font-bold text-primary-100">{`${firstname} ${lastname}`}</h5>
       </Link>
       <a className={`block truncate text-primary-300 hover:underline`}>

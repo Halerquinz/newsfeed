@@ -23,10 +23,12 @@ interface PostPanelControllerProps {
 export const PostPanelController: React.FC<PostPanelControllerProps> = ({
   setPostData,
 }) => {
-  const { conn } = useContext(AuthContext);
-  const [showEditModal, setShowEditModal] = useState(false);
   const { data, isLoading } = useGetPostByQueryParam();
   const screenType = useScreenType();
+  let mb = "mb-7";
+  if (screenType === "fullscreen") {
+    mb = "mb-8";
+  }
 
   useEffect(() => {
     if (data) {
@@ -48,16 +50,14 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
     return null;
   }
 
-  const postCreator = data.data.user;
-
   return (
     <>
-      <HeaderController title={data?.data?.description} />
+      <HeaderController title={data?.data?.post.description} />
       <MiddlePanel>
-        <div className={`flex flex-1 flex-col`}>
+        <div className={`flex flex-1 flex-col ${mb}`}>
           <PostCardWithComment
-            commentMap={data.data.comments}
-            {...data.data.post}
+            commentMap={data?.data?.comments!}
+            {...data?.data?.post!}
           />
         </div>
       </MiddlePanel>

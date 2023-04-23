@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback, useContext } from "react";
 import { PostCardAvatar } from "./PostCardAvatar";
 import { PostCardDesc } from "./PostCardDesc";
 import { PostCardHeading } from "./PostCardHeading";
@@ -11,9 +11,17 @@ import { apiBaseUrl } from "../lib/tests/constants";
 import { useTokenStore } from "../modules/auth/useTokenStore";
 import { CommentDetail } from "../types/util-types";
 import { PostComment } from "../modules/post/comment/PostComment";
+import { useMutation } from "react-query";
+import { SolidEllipsis } from "../icons";
+import { queryClient } from "../lib/tests/queryClient";
+import { AuthContext } from "../modules/auth/AuthProvider";
+import { DropdownController } from "./DropdownController";
+import { PostDropdown } from "./PostDropdown";
+import { useRouter } from "next/router";
 
 interface PostCardWithCommentProps {
   id: number;
+  userId: number;
   profilePicture: string;
   firstname: string;
   lastname: string;
@@ -30,6 +38,7 @@ interface PostCardWithCommentProps {
 
 export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
   id,
+  userId: creatorId,
   createdDate,
   firstname,
   lastname,
@@ -43,10 +52,34 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
   likeStatus,
   commentMap,
 }) => {
+  const { conn } = useContext(AuthContext);
+  const { token } = useTokenStore.getState();
+  const { push } = useRouter();
+  const currentUserId = conn?.user?.id;
+
+  const deletePost = useCallback(async () => {
+    const res = await fetch(`${apiBaseUrl}/post/delete/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `bearer ${token}`,
+      },
+      method: "DELETE",
+    });
+    return await res.json();
+  }, [conn]);
+
+  const { mutateAsync } = useMutation(deletePost, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("/post");
+      queryClient.invalidateQueries(`/post/get_post/${id}`);
+      queryClient.invalidateQueries(`/post/get-posts/user`);
+    },
+  });
+
   return (
     <div
       onClick={onClick}
-      className="flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out "
+      className="relative flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out"
     >
       <PostCardLeft>{<PostCardAvatar avatar={profilePicture} />}</PostCardLeft>
       <PostCardRight
@@ -68,9 +101,33 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
           />
         }
         comment={
-          commentMap && <PostComment commentMap={commentMap} postId={id} />
+          commentMap && (
+            <PostComment
+              commentMap={commentMap}
+              postId={id}
+              postCreatorId={creatorId}
+            />
+          )
         }
       />
+      <DropdownController
+        className="absolute right-3 md:right-0"
+        innerClassName="absolute transform -translate-x-full"
+        overlay={() => (
+          <PostDropdown
+            onDeletePost={async (e: React.SyntheticEvent<EventTarget>) => {
+              e.stopPropagation();
+              const res = await mutateAsync();
+              if (res.status === "success") {
+                push("/dash");
+              }
+            }}
+            creatorId={creatorId}
+          />
+        )}
+      >
+        <SolidEllipsis />
+      </DropdownController>
     </div>
   );
 };

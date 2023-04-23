@@ -11,7 +11,7 @@ export const LeftHeader: React.FC<LeftHeaderProps> = ({}) => {
 
   return (
     <>
-      <Link href="">
+      <Link href="/dash">
         <div className="w-full">
           {screenType === "3-cols" ? <LgLogo /> : <LogoIcon />}
         </div>

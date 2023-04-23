@@ -29,6 +29,7 @@
     "@tailwindcss/line-clamp": "^0.4.2",
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/react": "18.0.29",
+    "@types/react-dom": "^18.0.11",
     "@types/react-modal": "^3.13.1",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.21",

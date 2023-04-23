@@ -5,6 +5,7 @@ import { useTokenStore } from "../auth/useTokenStore";
 import { DefaultLoginLayout } from "../layouts/DefaultLoginLayout";
 import { LoginController } from "../login/LoginController";
 import { AuthContext } from "../auth/AuthProvider";
+import { HeaderController } from "../display/HeaderController";
 
 interface LoginPageProps {}
 
@@ -23,5 +24,10 @@ export const LoginPage: PageComponent<LoginPageProps> = ({}) => {
 
   if (!tokenChecked) return null;
 
-  return <DefaultLoginLayout>{<LoginController />}</DefaultLoginLayout>;
+  return (
+    <>
+      <HeaderController title="Login" />
+      <DefaultLoginLayout>{<LoginController />}</DefaultLoginLayout>
+    </>
+  );
 };

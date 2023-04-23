@@ -11,7 +11,7 @@ export interface SettingsIconProps {
   trailingIcon?: ReactElement;
   classes?: string;
   transition?: boolean;
-  onClick?: () => void;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
   last?: boolean;
 }
 

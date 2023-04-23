@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { usePopper } from "react-popper";
+import { createPortal } from "react-dom";
 
 interface DropdownControllerProps {
   className?: string;
-  overlay: () => React.ReactNode;
+  overlay: (c: () => void) => React.ReactNode;
   zIndex?: number;
   children?: React.ReactNode;
   innerClassName?: string;
+  portal?: boolean;
 }
 
 export const DropdownController: React.FC<DropdownControllerProps> = ({
@@ -15,6 +17,7 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
   zIndex,
   children,
   innerClassName,
+  portal,
 }) => {
   const [visible, setVisibility] = useState(false);
   const referenceRef = useRef<HTMLButtonElement>(null);
@@ -55,7 +58,7 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
         style={styles.offset}
         className={`${visible ? "" : "hidden"} ${innerClassName}`}
       >
-        {visible ? overlay() : null}
+        {visible ? overlay(() => setVisibility(false)) : null}
       </div>
     </div>
   );
@@ -64,13 +67,14 @@ export const DropdownController: React.FC<DropdownControllerProps> = ({
       <button
         className="focus:outline-no-chrome flex"
         ref={referenceRef}
-        onClick={() => {
+        onClick={(e: React.SyntheticEvent<EventTarget>) => {
+          e.stopPropagation();
           setVisibility(!visible);
         }}
       >
         {children}
       </button>
-      {body}
+      {portal ? createPortal(body, document.querySelector("#main")!) : body}
     </React.Fragment>
   );
 };
