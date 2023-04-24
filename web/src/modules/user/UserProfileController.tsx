@@ -15,12 +15,13 @@ export const UserProfileController: React.FC<
   UserProfileControllerProps
 > = ({}) => {
   const { conn } = useContext(AuthContext);
-  const { push, query } = useRouter();
+  const { push, query, asPath } = useRouter();
   const { data, isLoading } = useQuery<Data<User>>({
     queryKey: `/user/${query.id as string}`,
     enabled: typeof query.id === "string" && !!query.id && !isServer,
     refetchOnMount: "always",
   });
+  console.log(data);
 
   if (isLoading) {
     return <CenterLoader />;

@@ -15,6 +15,7 @@ import { queryClient } from "../lib/tests/queryClient";
 import { AuthContext } from "../modules/auth/AuthProvider";
 import { useTokenStore } from "../modules/auth/useTokenStore";
 import { useRouter } from "next/router";
+import { redirectToProfile } from "../lib/redirectToProfile";
 
 interface CommentCardProps {
   id: number;
@@ -40,6 +41,7 @@ export const CommentCard: React.FC<CommentCardProps> = ({
   onClick,
 }) => {
   const { token } = useTokenStore.getState();
+  const { push } = useRouter();
 
   const deleteComment = useCallback(async () => {
     const res = await fetch(`${apiBaseUrl}/comment/delete/${id}`, {
@@ -66,13 +68,23 @@ export const CommentCard: React.FC<CommentCardProps> = ({
       className="relative flex w-full rounded-lg bg-primary-800 p-2 transition duration-200 ease-in-out"
     >
       <CommentCardLeft>
-        {<CommentCardAvatar avatar={profilePicture} />}
+        {
+          <CommentCardAvatar
+            avatar={profilePicture}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
+          />
+        }
       </CommentCardLeft>
       <CommentCardRight
         detail={
           <CommentCardDetailUser
             createdDate={convertTZ(createdDate)}
             username={username}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
           />
         }
         text={<CommentCardText text={text} />}

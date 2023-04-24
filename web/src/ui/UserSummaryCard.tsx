@@ -38,10 +38,10 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
         <div className="mt-2 flex">
           <div className="ml-3 flex flex-col">
             <span className="overflow-hidden break-all text-left font-bold text-primary-100">
-              {username}
+              {`${fullname}`}
             </span>
             <span className="break-all text-left text-primary-300">
-              {`${fullname}`}
+              {username}
             </span>
           </div>
         </div>

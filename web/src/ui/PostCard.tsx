@@ -14,8 +14,9 @@ import { AuthContext } from "../modules/auth/AuthProvider";
 import { useMutation } from "react-query";
 import { SolidEllipsis } from "../icons";
 import { apiBaseUrl } from "../lib/tests/constants";
-import { User } from "../types/util-types";
 import { queryClient } from "../lib/tests/queryClient";
+import { useRouter } from "next/router";
+import { redirectToProfile } from "../lib/redirectToProfile";
 
 interface PostCardProps {
   id: number;
@@ -50,7 +51,7 @@ export const PostCard: React.FC<PostCardProps> = ({
 }) => {
   const { conn } = useContext(AuthContext);
   const { token } = useTokenStore.getState();
-  const currentUserId = conn?.user?.id;
+  const { push } = useRouter();
 
   const deletePost = useCallback(async () => {
     const res = await fetch(`${apiBaseUrl}/post/delete/${id}`, {
@@ -76,13 +77,25 @@ export const PostCard: React.FC<PostCardProps> = ({
       onClick={onClick}
       className="relative flex w-full cursor-pointer rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out"
     >
-      <PostCardLeft>{<PostCardAvatar avatar={profilePicture} />}</PostCardLeft>
+      <PostCardLeft>
+        {
+          <PostCardAvatar
+            avatar={profilePicture}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
+          />
+        }
+      </PostCardLeft>
       <PostCardRight
         detail={
           <PostCardHeading
             createdDate={convertTZ(createdDate)}
             fullname={`${firstname} ${lastname}`}
             username={username}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
           />
         }
         text={<PostCardDesc desc={description} />}

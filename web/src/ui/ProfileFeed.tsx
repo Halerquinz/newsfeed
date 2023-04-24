@@ -30,9 +30,6 @@ const Page: React.FC<{
     // Magic React Query
   });
 
-  console.log(data);
-  const { setQueryData } = useQueryClient();
-
   if (!data) {
     return null;
   }

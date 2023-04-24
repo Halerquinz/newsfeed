@@ -18,11 +18,7 @@ export const UserPage: PageComponent<UserPageProps> = ({ user, id }) => {
   return (
     <>
       {user ? (
-        <HeaderController
-          description={user.about}
-          embed={{ image: user.profilePicture }}
-          title={user.username}
-        />
+        <HeaderController description={user.about} title={user.username} />
       ) : (
         <HeaderController />
       )}

@@ -65,7 +65,7 @@ interface SingleUserProps {
 export const SingleUser: React.FC<SingleUserProps> = ({
   size = "default",
   username,
-  className,
+  className = "",
   src,
   hover,
 }) => {

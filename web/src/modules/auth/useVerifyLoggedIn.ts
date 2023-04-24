@@ -6,6 +6,7 @@ import { AuthContext } from "./AuthProvider";
 export const useVerifyLoggedIn = () => {
   const { asPath, replace } = useRouter();
   const hasToken = useTokenStore((state) => !!state.token);
+
   useEffect(() => {
     if (!hasToken) {
       replace(`/`);

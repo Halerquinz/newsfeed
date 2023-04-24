@@ -18,6 +18,8 @@ import { AuthContext } from "../modules/auth/AuthProvider";
 import { DropdownController } from "./DropdownController";
 import { PostDropdown } from "./PostDropdown";
 import { useRouter } from "next/router";
+import { redirectToProfile } from "../lib/redirectToProfile";
+import { usePreviousRouteStore } from "../global-stores/usePreviousRouteStore";
 
 interface PostCardWithCommentProps {
   id: number;
@@ -54,8 +56,8 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
 }) => {
   const { conn } = useContext(AuthContext);
   const { token } = useTokenStore.getState();
-  const { push } = useRouter();
-  const currentUserId = conn?.user?.id;
+  const { route } = usePreviousRouteStore.getState();
+  const { push, replace } = useRouter();
 
   const deletePost = useCallback(async () => {
     const res = await fetch(`${apiBaseUrl}/post/delete/${id}`, {
@@ -81,13 +83,25 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
       onClick={onClick}
       className="relative flex w-full rounded-lg bg-primary-800 p-4 transition duration-200 ease-in-out"
     >
-      <PostCardLeft>{<PostCardAvatar avatar={profilePicture} />}</PostCardLeft>
+      <PostCardLeft>
+        {
+          <PostCardAvatar
+            avatar={profilePicture}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
+          />
+        }
+      </PostCardLeft>
       <PostCardRight
         detail={
           <PostCardHeading
             createdDate={convertTZ(createdDate)}
             fullname={`${firstname} ${lastname}`}
             username={username}
+            onClick={(e: React.SyntheticEvent<EventTarget>) => {
+              redirectToProfile(e, creatorId, push);
+            }}
           />
         }
         text={<PostCardDesc desc={description} />}
@@ -119,7 +133,7 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
               e.stopPropagation();
               const res = await mutateAsync();
               if (res.status === "success") {
-                push("/dash");
+                replace(route);
               }
             }}
             creatorId={creatorId}
