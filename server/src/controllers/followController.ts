@@ -22,6 +22,7 @@ class FollowController {
       const followRepo: Repository<Follow> = await AppDataSource.getRepository(
         Follow
       );
+<<<<<<< HEAD
 
       const userFollowUser: Follow[] = await followRepo.find({
         where: {
@@ -43,11 +44,32 @@ class FollowController {
       await followRepo.save(newFollow);
 
       res.status(200).json({ status: "success", data: newFollow });
+=======
+      const userFollowUser = await Follow.findOne({
+        where: {
+          userFollowedId: parseInt(id),
+          userFollowingId: parseInt(currentUserId),
+        },
+      });
+      let followResult: Follow;
+
+      if (!userFollowUser) {
+        followResult = await new Follow();
+        followResult.userFollowedId = parseInt(id);
+        followResult.userFollowingId = parseInt(currentUserId);
+        await followRepo.save(followResult);
+        return res.status(200).json({ status: "success", data: "follow" });
+      } else {
+        followResult = await followRepo.remove(userFollowUser);
+        return res.status(200).json({ status: "success", data: "unfollow" });
+      }
+>>>>>>> 30df116d1829ddcbc650491b58c7aef15017e759
     } catch (error) {
       let msg;
       if (error instanceof Error) {
         msg = error.message;
       }
+<<<<<<< HEAD
       console.log(error);
       res.status(500).json({ status: "fail", msg });
     }
@@ -109,6 +131,11 @@ class FollowController {
       res.status(500).json({ status: "fail", msg });
     }
   }
+=======
+      res.status(500).json({ status: "fail", msg });
+    }
+  }
+>>>>>>> 30df116d1829ddcbc650491b58c7aef15017e759
 }
 
 export default new FollowController();

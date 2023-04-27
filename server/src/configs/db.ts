@@ -21,5 +21,9 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: false,
   entities: [User, Post, Comment, Like, Chat, Message, Follow],
+<<<<<<< HEAD
   // migrations: [FakePost1680699268027],
+=======
+  migrations: [FakePost1680699268027],
+>>>>>>> 30df116d1829ddcbc650491b58c7aef15017e759
 });
