@@ -23,6 +23,7 @@ import { Like } from "./Like";
 import { Post } from "./Post";
 import { Chat } from "./Chat";
 import { Message } from "./Message";
+import { Follow } from "./Follow";
 
 @Entity("users")
 export class User extends BaseEntity {
@@ -83,22 +84,11 @@ export class User extends BaseEntity {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @ManyToMany(() => User, (user) => user.following)
-  @JoinTable({
-    name: "follows",
-    joinColumn: {
-      name: "following",
-      referencedColumnName: "id",
-    },
-    inverseJoinColumn: {
-      name: "follower",
-      referencedColumnName: "id",
-    },
-  })
+  @OneToMany(() => Follow, (follow) => follow.userFollowed)
   followers: User[];
 
-  @ManyToMany(() => User, (user) => user.followers)
-  following: User[];
+  @OneToMany(() => Follow, (follow) => follow.userFollowing)
+  followings: User[];
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];

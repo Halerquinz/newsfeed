@@ -1,10 +1,25 @@
-import { Entity, Column, BaseEntity, PrimaryColumn, ManyToOne} from 'typeorm'
-import { User } from './User'
-@Entity('follows')
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  Index,
+} from "typeorm";
+import { User } from "./User";
+@Entity("follows")
+@Index(["userFollowingId", "userFollowedId"], { unique: true })
 export class Follow extends BaseEntity {
-    @Column()
-    userFollowing: number
+  @ManyToOne(() => User, (user) => user.followings)
+  userFollowing: User;
 
-    @Column()
-    userFollowed: number
+  @ManyToOne(() => User, (user) => user.followers)
+  userFollowed: User;
+
+  @PrimaryColumn()
+  userFollowingId: number;
+
+  @PrimaryColumn()
+  userFollowedId: number;
 }
