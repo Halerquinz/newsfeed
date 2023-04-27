@@ -5,7 +5,7 @@ import { check, body } from "express-validator";
 
 const router = Router();
 // username, email, phone, firstname, lastname, profilePicture, coverPicture, livesin, about
-router.get("/:userId", userController.getUser);
+router.get("/:userId", isAuth, userController.getUser);
 router.get("/users/getProfile", isAuth, userController.getUsers);
 router.post(
   "/update/:userId",

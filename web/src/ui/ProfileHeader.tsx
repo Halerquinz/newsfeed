@@ -8,21 +8,21 @@ import { EditProfileModal } from "../modules/user/EditProfileModal";
 import { useUpdateQuery } from "../shared-hooks/useUpdateQuery";
 import { apiBaseUrl } from "../lib/tests/constants";
 import { AuthContext } from "../modules/auth/AuthProvider";
-import { Data, PostsResponse, Sex, User } from "../types/util-types";
+import {
+  Data,
+  PostsResponse,
+  Sex,
+  UserWithFollowInfo,
+} from "../types/util-types";
+import { UserBadge } from "./UserBadge";
 
 export interface ProfileHeaderProps {
-  displayName: string;
-  username: string;
-  pfp?: string;
-  canDM?: boolean;
   isCurrentUser?: boolean;
-  user: User;
+  user: UserWithFollowInfo;
   children?: React.ReactNode;
 }
 
 export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
-  displayName,
-  username,
   user,
   isCurrentUser = true,
   children,
@@ -36,13 +36,15 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         isOpen={showEditProfileModal}
         onRequestClose={() => setShowEditProfileModal(false)}
         onEdit={(d) => {
-          update(`/user/${conn?.user?.id}`, (preData: Data<User>) =>
-            !preData
-              ? preData
-              : {
-                  status: "success",
-                  data: { ...preData.data, ...d },
-                }
+          update(
+            `/user/${conn?.user?.id}`,
+            (preData: Data<UserWithFollowInfo>) =>
+              !preData
+                ? preData
+                : {
+                    status: "success",
+                    data: { ...preData.data, ...d },
+                  }
           );
         }}
       />
@@ -53,12 +55,17 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         />
       </div>
       <div className="flex w-3/6 flex-col font-sans">
-        <h4 className="truncate font-bold text-primary-100">{displayName}</h4>
+        <h4 className="truncate font-bold text-primary-100">{`${user.firstname} ${user.lastname}`}</h4>
         <div className="flex flex-row items-center">
           <p
             className="mr-2 text-primary-300"
             data-testid="profile-info-username"
-          >{`@${username}`}</p>
+          >{`@${user.username}`}</p>
+          {user.followsYou && (
+            <UserBadge color="grey" variant="primary-700">
+              Theo dõi bạn
+            </UserBadge>
+          )}
         </div>
         <div className="mt-2 flex">{children}</div>
       </div>
@@ -70,9 +77,12 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               loading={false}
               onClick={async () => {}}
               size="small"
+              // color={user.youAreFollowing ? "secondary" : "primary"}
+              // icon={user.youAreFollowing ? null : <SolidFriends />}
               color="primary"
-              icon={<SolidFriends />}
-            ></Button>
+            >
+              Theo dõi
+            </Button>
           )}
           {isCurrentUser ? (
             <Button

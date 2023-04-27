@@ -17,6 +17,7 @@ import { apiBaseUrl } from "../lib/tests/constants";
 import { queryClient } from "../lib/tests/queryClient";
 import { useRouter } from "next/router";
 import { redirectToProfile } from "../lib/redirectToProfile";
+import Link from "next/link";
 
 interface PostCardProps {
   id: number;

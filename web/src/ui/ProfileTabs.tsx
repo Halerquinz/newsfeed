@@ -2,11 +2,11 @@ import React, { useContext, useState } from "react";
 import { ProfileAbout } from "./ProfileAbout";
 import { ProfileAdmin } from "./ProfileAdmin";
 import { AuthContext } from "../modules/auth/AuthProvider";
-import { User } from "../types/util-types";
+import { UserWithFollowInfo } from "../types/util-types";
 import { ProfileFeed } from "./ProfileFeed";
 
 export interface ProfileTabsProps extends React.HTMLAttributes<HTMLDivElement> {
-  user: User;
+  user: UserWithFollowInfo;
 }
 
 export const ProfileTabs: React.FC<ProfileTabsProps> = ({
@@ -56,8 +56,8 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
         <ProfileAbout
           className={activeTab !== "about" ? "hidden" : ""}
           username={user.username}
-          followers={1000}
-          following={1000}
+          followers={user.followerCount}
+          following={user.followingCount}
           about={user.about}
         />
         <ProfileFeed

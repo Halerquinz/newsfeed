@@ -5,6 +5,7 @@ import { InputField } from "../form-fields/InputField";
 import { toErrorMap } from "../ultils/toErrorMap";
 import { Button } from "./Button";
 import { NativeSelect } from "./NativeSelect";
+import { apiBaseUrl } from "../lib/tests/constants";
 
 interface RegisterFormProps {}
 
@@ -25,7 +26,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({}) => {
         sex: "",
       }}
       onSubmit={async (values, { setErrors }) => {
-        const response = await fetch("http://localhost:5000/auth/register", {
+        const response = await fetch(`${apiBaseUrl}/auth/register`, {
           headers: {
             "Content-Type": "application/json",
           },

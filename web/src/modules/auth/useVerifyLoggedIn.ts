@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { useTokenStore } from "./useTokenStore";
-import { AuthContext } from "./AuthProvider";
 
 export const useVerifyLoggedIn = () => {
   const { asPath, replace } = useRouter();

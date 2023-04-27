@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { ProfileBlock } from "../../ui/ProfileBlock";
 import { UserSummaryCard } from "../../ui/UserSummaryCard";
 import { AuthContext } from "../auth/AuthProvider";
 import { formatDay } from "../../lib/tests/formatDay";
 import { Spinner } from "../../ui/Spinner";
 import { useRouter } from "next/router";
+import { EditProfileModal } from "../user/EditProfileModal";
 
 interface ProfileBlockControllerProps {}
 
@@ -20,7 +21,7 @@ export const ProfileBlockController: React.FC<
   }
 
   return (
-    <React.Fragment>
+    <>
       <ProfileBlock
         top={
           <UserSummaryCard
@@ -35,6 +36,6 @@ export const ProfileBlockController: React.FC<
           />
         }
       />
-    </React.Fragment>
+    </>
   );
 };

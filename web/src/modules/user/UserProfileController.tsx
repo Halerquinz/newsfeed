@@ -1,13 +1,12 @@
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { Button } from "../../ui/Button";
 import { CenterLoader } from "../../ui/CenterLoader";
 import { InfoText } from "../../ui/InfoText";
 import { UserProfile } from "../../ui/UserProfile";
 import { AuthContext } from "../auth/AuthProvider";
 import { useQuery } from "react-query";
 import { isServer } from "../../lib/tests/isServer";
-import { Data, User } from "../../types/util-types";
+import { Data, UserWithFollowInfo } from "../../types/util-types";
 
 interface UserProfileControllerProps {}
 
@@ -16,7 +15,7 @@ export const UserProfileController: React.FC<
 > = ({}) => {
   const { conn } = useContext(AuthContext);
   const { push, query, asPath } = useRouter();
-  const { data, isLoading } = useQuery<Data<User>>({
+  const { data, isLoading } = useQuery<Data<UserWithFollowInfo>>({
     queryKey: `/user/${query.id as string}`,
     enabled: typeof query.id === "string" && !!query.id && !isServer,
     refetchOnMount: "always",

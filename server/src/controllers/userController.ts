@@ -22,6 +22,7 @@ interface UserRequest {
 
 class UserController {
   async getUser(req: Request, res: Response) {
+    const currentUserId = req.userId;
     const id = req.params.userId;
     try {
       const userRepo: Repository<User> = await AppDataSource.getRepository(
@@ -34,7 +35,29 @@ class UserController {
         return res.status(400).json({ status: "fail", msg: "User not found" });
       }
       const { password, ...orthers } = user;
-      res.status(200).json({ status: "success", data: orthers });
+      const youAreFollowing = await AppDataSource.getRepository(
+        "follows"
+      ).findOne({
+        where: {
+          userFollowingId: Number(currentUserId),
+          userFollowedId: Number(id),
+        },
+      });
+      const followsYou = await AppDataSource.getRepository("follows").findOne({
+        where: {
+          userFollowingId: Number(id),
+          userFollowedId: Number(currentUserId),
+        },
+      });
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          ...orthers,
+          youAreFollowing: !!youAreFollowing,
+          followsYou: !!followsYou,
+        },
+      });
     } catch (error) {
       let msg;
       if (error instanceof Error) {

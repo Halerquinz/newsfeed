@@ -86,7 +86,7 @@ export const PostInteract: React.FC<PostInteractProps> = ({
       <div className="mr-10 flex items-center">
         <Button
           size="tiny"
-          color="transparent"
+          color={"transparent"}
           transition={true}
           icon={<SolidComment />}
         />

@@ -9,7 +9,7 @@ import { Modal } from "../../ui/Modal";
 import { AuthContext } from "../auth/AuthProvider";
 import { useMutation } from "react-query";
 import { useTokenStore } from "../auth/useTokenStore";
-import { Sex, User } from "../../types/util-types";
+import { Sex, UserWithFollowInfo } from "../../types/util-types";
 import { apiBaseUrl } from "../../lib/tests/constants";
 import { updateUserProfile } from "../../ultils/api";
 
@@ -49,7 +49,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const { token } = useTokenStore.getState();
 
   const updateUserProfile = useCallback(
-    async (data: User) => {
+    async (data: UserWithFollowInfo) => {
       const res = await fetch(`${apiBaseUrl}/user/update/${conn?.user?.id}`, {
         headers: {
           "Content-Type": "application/json",

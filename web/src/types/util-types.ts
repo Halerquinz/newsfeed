@@ -21,15 +21,53 @@ export type User = {
   isDeleted: boolean;
   createdDate: string;
   updatedDate: string;
+  followingCount: number;
+  followerCount: number;
+};
+
+export type UserWithFollowInfo = {
+  id: number;
+  username: string;
+  email: string;
+  phone: string;
+  firstname: string;
+  lastname: string;
+  isAdmin: boolean;
+  profilePicture: string;
+  coverPicture: string;
+  livein: string;
+  about: string;
+  sex: Sex;
+  dayOfBirth: string;
+  isDeleted: boolean;
+  createdDate: string;
+  updatedDate: string;
+  followingCount: number;
+  followerCount: number;
+  youAreFollowing: boolean;
+  followsYou: boolean;
 };
 
 export interface UserSummaryProfile {
-  id: string;
+  id: number;
   username: string;
   firstname: string;
   lastname: string;
   profilePicture: string;
 }
+export interface UserFollowProfile {
+  id: string;
+  username: string;
+  firstname: string;
+  lastname: string;
+  profilePicture: string;
+  youAreFollowing: boolean;
+}
+
+export type FollowResponse = {
+  following: UserFollowProfile[];
+  followed: UserFollowProfile[];
+};
 
 export type Data<T> = {
   status: "success" | "fail";

@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import { apiBaseUrl } from "../lib/tests/constants";
 import { useTokenStore } from "../modules/auth/useTokenStore";
-import { User } from "../types/util-types";
+import { UserWithFollowInfo } from "../types/util-types";
 import { AuthContext } from "../modules/auth/AuthProvider";
 import fetch from "isomorphic-fetch";
 
-export const updateUserProfile = async (data: User) => {
+export const updateUserProfile = async (data: UserWithFollowInfo) => {
   const { token } = useTokenStore.getState();
   const { conn } = useContext(AuthContext);
   console.log(conn);

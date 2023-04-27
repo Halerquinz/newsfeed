@@ -1,4 +1,3 @@
-import { Field } from "formik";
 import { FieldError } from "../types/FieldError";
 
 export const toErrorMap = ({ field, msg }: FieldError) => {
