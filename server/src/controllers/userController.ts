@@ -22,6 +22,33 @@ interface UserRequest {
 
 class UserController {
   async getUser(req: Request, res: Response) {
+    const id = req.params.userId;
+    try {
+      const userRepo: Repository<User> = await AppDataSource.getRepository(
+        User
+      );
+      const user: User | null = await userRepo.findOne({
+        where: { id: parseInt(id) },
+      });
+      if (!user) {
+        return res.status(400).json({ status: "fail", msg: "User not found" });
+      }
+      const { password, ...orthers } = user;
+      res.status(200).json({
+        status: "success",
+        data: {
+          ...orthers,
+        },
+      });
+    } catch (error) {
+      let msg;
+      if (error instanceof Error) {
+        msg = error.message;
+      }
+      res.status(500).json({ status: "fail", msg });
+    }
+  }
+  async getUserWithFollowInfo(req: Request, res: Response) {
     const currentUserId = req.userId;
     const id = req.params.userId;
     try {

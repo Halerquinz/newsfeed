@@ -54,6 +54,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
 
       <div>
         <ProfileAbout
+          userId={user.id}
           className={activeTab !== "about" ? "hidden" : ""}
           username={user.username}
           followers={user.followerCount}

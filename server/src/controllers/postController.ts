@@ -290,7 +290,6 @@ class PostController {
       order by p.createdDate DESC
       limit ${limitPlusOne}
       `;
-      console.log(queryString);
       const posts = await AppDataSource.query(queryString);
 
       // const qb = await AppDataSource.getRepository(Post)

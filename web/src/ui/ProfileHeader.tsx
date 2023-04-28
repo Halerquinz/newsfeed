@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import { ProfileHeaderWrapper } from "./ProfileHeaderWrapper";
 import { Button } from "./Button";
 import { SolidFriends, SolidCompass, SolidMessages } from "../icons";
@@ -15,6 +15,8 @@ import {
   UserWithFollowInfo,
 } from "../types/util-types";
 import { UserBadge } from "./UserBadge";
+import { followAction } from "../lib/followAction";
+import { queryClient } from "../lib/tests/queryClient";
 
 export interface ProfileHeaderProps {
   isCurrentUser?: boolean;
@@ -30,6 +32,11 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const update = useUpdateQuery();
   const { conn } = useContext(AuthContext);
+  // const followFn = useMemo(() => followAction(), []);
+  const followFn = followAction();
+  const { mutateAsync: follow, isLoading: followLoading } =
+    useMutation(followFn);
+
   return (
     <ProfileHeaderWrapper coverUrl={user.coverPicture}>
       <EditProfileModal
@@ -37,7 +44,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         onRequestClose={() => setShowEditProfileModal(false)}
         onEdit={(d) => {
           update(
-            `/user/${conn?.user?.id}`,
+            `/user/userWithFollowInfo/${conn?.user?.id}`,
             (preData: Data<UserWithFollowInfo>) =>
               !preData
                 ? preData
@@ -74,14 +81,31 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <div className="flex flex-row content-end justify-end gap-2">
           {!isCurrentUser && (
             <Button
-              loading={false}
-              onClick={async () => {}}
+              loading={followLoading}
+              onClick={async () => {
+                follow(user.id);
+                update(
+                  `/user/userWithFollowInfo/${user.id}`,
+                  (d: Data<UserWithFollowInfo>) =>
+                    !d
+                      ? d
+                      : {
+                          status: "success",
+                          data: {
+                            ...d.data,
+                            followerCount:
+                              d.data?.followerCount! +
+                              (d.data?.youAreFollowing ? -1 : 1),
+                            youAreFollowing: !d.data?.youAreFollowing,
+                          },
+                        }
+                );
+              }}
               size="small"
-              // color={user.youAreFollowing ? "secondary" : "primary"}
-              // icon={user.youAreFollowing ? null : <SolidFriends />}
-              color="primary"
+              color={user.youAreFollowing ? "secondary" : "primary"}
+              icon={user.youAreFollowing ? null : <SolidFriends />}
             >
-              Theo dõi
+              {user.youAreFollowing ? "Bỏ theo dõi " : "Theo dõi"}
             </Button>
           )}
           {isCurrentUser ? (

@@ -8,6 +8,7 @@ import { ProfileHeader } from "../../ui/ProfileHeader";
 import { UserWithFollowInfo } from "../../types/util-types";
 import { MiddlePanel } from "../layouts/GridPanels";
 import { UserProfileController } from "./UserProfileController";
+import { useTokenStore } from "../auth/useTokenStore";
 
 interface UserPageProps {
   user: UserWithFollowInfo | null;

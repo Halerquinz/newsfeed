@@ -25,13 +25,14 @@ export const ProfileBlockController: React.FC<
       <ProfileBlock
         top={
           <UserSummaryCard
+            id={conn.user?.id!}
             about={conn.user?.about}
             profilePicture={conn.user?.profilePicture!}
             username={conn.user?.username!}
             fullname={`${conn.user?.firstname} ${conn.user?.lastname}`}
             createdDate={formatDay(conn.user?.createdDate!)}
-            numFollowers={2000}
-            numFollowing={1000}
+            numFollowers={conn.user?.followerCount!}
+            numFollowing={conn.user?.followingCount!}
             onClick={() => push(`/u/${conn.user?.id}`)}
           />
         }

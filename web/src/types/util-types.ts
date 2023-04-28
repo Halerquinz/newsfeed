@@ -56,7 +56,7 @@ export interface UserSummaryProfile {
   profilePicture: string;
 }
 export interface UserFollowProfile {
-  id: string;
+  id: number;
   username: string;
   firstname: string;
   lastname: string;
@@ -64,8 +64,10 @@ export interface UserFollowProfile {
   youAreFollowing: boolean;
 }
 
-export type FollowResponse = {
+export type FollowingResponse = {
   following: UserFollowProfile[];
+};
+export type FollowerResponse = {
   followed: UserFollowProfile[];
 };
 

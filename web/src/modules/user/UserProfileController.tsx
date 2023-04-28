@@ -7,6 +7,7 @@ import { AuthContext } from "../auth/AuthProvider";
 import { useQuery } from "react-query";
 import { isServer } from "../../lib/tests/isServer";
 import { Data, UserWithFollowInfo } from "../../types/util-types";
+import { useGetUserWithFollowInfo } from "./useGetUserWithFollowInfo";
 
 interface UserProfileControllerProps {}
 
@@ -16,14 +17,20 @@ export const UserProfileController: React.FC<
   const { conn } = useContext(AuthContext);
   const { push, query, asPath } = useRouter();
   const { data, isLoading } = useQuery<Data<UserWithFollowInfo>>({
-    queryKey: `/user/${query.id as string}`,
+    queryKey: `/user/userWithFollowInfo/${query.id as string}`,
     enabled: typeof query.id === "string" && !!query.id && !isServer,
     refetchOnMount: "always",
   });
-  console.log(data);
+  console.log("re render");
+
+  // const { data, isLoading } = useGetUserWithFollowInfo();
 
   if (isLoading) {
     return <CenterLoader />;
+  }
+
+  if (!data) {
+    return null;
   }
 
   if (data?.status && data.status.toLowerCase().includes("user not found")) {

@@ -16,6 +16,7 @@ export const AuthContext = React.createContext<{
 interface AuthProviderProps {
   children: React.ReactNode;
 }
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [conn, setConn] = useState<V>(null);
   const token = useTokenStore((state) => state.token);

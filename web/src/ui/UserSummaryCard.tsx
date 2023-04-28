@@ -1,10 +1,11 @@
 import React from "react";
 import { SingleUser } from "./user/SingleUser";
 import { formatNumber } from "../ultils/formatNumber";
+import Link from "next/link";
 
 interface UserSummaryCardProps {
   onClick?: () => void;
-  id?: string;
+  id: number;
   username: string;
   numFollowers: number;
   numFollowing: number;
@@ -48,16 +49,24 @@ export const UserSummaryCard: React.FC<UserSummaryCardProps> = ({
       </button>
       <div className="mt-3 flex">
         <div className="flex rounded-8 px-2 py-1 transition duration-200 ease-in-out hover:bg-primary-700">
-          <span className="font-bold text-primary-100">
-            {formatNumber(numFollowers)}
-          </span>
-          <span className="ml-1.5 lowercase text-primary-300">followers</span>
+          <Link href={`/u/${id}/follower`}>
+            <span className="font-bold text-primary-100">
+              {formatNumber(numFollowers)}
+            </span>
+            <span className="ml-1.5 lowercase text-primary-300">
+              Người theo dõi
+            </span>
+          </Link>
         </div>
         <div className="flex rounded-8 px-2 py-1 transition duration-200 ease-in-out hover:bg-primary-700">
-          <span className="font-bold text-primary-100">
-            {formatNumber(numFollowing)}
-          </span>
-          <span className="ml-1.5 lowercase text-primary-300">following</span>
+          <Link href={`/u/${id}/following`}>
+            <span className="font-bold text-primary-100">
+              {formatNumber(numFollowing)}
+            </span>
+            <span className="ml-1.5 lowercase text-primary-300">
+              Đang theo dõi
+            </span>
+          </Link>
         </div>
       </div>
       {about !== "null" && (
