@@ -5,6 +5,8 @@ import { isServer } from "../lib/tests/isServer";
 import { QueryClientProvider } from "react-query";
 import { queryClient } from "../lib/tests/queryClient";
 import { PageComponent } from "../types/PageComponent";
+import { ChatContextProvider } from "../modules/chat/ChatProvider";
+import { WebSocketProvider } from "../modules/chat/WebSocketProvider";
 
 export default function App({ Component, pageProps }: AppProps) {
   // if (isServer && !Component.getInitialProps) {
@@ -13,9 +15,13 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <AuthProvider>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
+      <WebSocketProvider>
+        <ChatContextProvider>
+          <QueryClientProvider client={queryClient}>
+            <Component {...pageProps} />
+          </QueryClientProvider>
+        </ChatContextProvider>
+      </WebSocketProvider>
     </AuthProvider>
   );
 }

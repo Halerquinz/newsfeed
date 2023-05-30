@@ -23,9 +23,10 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({}) => {
         firstname: "",
         lastname: "",
         dateOfBirth: "",
-        sex: "",
+        sex: "male",
       }}
       onSubmit={async (values, { setErrors }) => {
+        console.log(values);
         const response = await fetch(`${apiBaseUrl}/auth/register`, {
           headers: {
             "Content-Type": "application/json",

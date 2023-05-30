@@ -16,10 +16,10 @@ export class Chat extends BaseEntity {
   @PrimaryGeneratedColumn()
   public readonly id: number;
 
-  @ManyToOne(type => User, user => user.chatUser1)
+  @ManyToOne((type) => User, (user) => user.chatUser1)
   user1: User;
 
-  @ManyToOne(type => User, user => user.chatUser2)
+  @ManyToOne((type) => User, (user) => user.chatUser2)
   user2: User;
 
   @Column()
@@ -28,7 +28,7 @@ export class Chat extends BaseEntity {
   @Column()
   user2Id: number;
 
-  @OneToMany(type => Message, message => message.chat)
+  @OneToMany((type) => Message, (message) => message.chat)
   messages: Message[];
 
   @CreateDateColumn()

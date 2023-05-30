@@ -1,23 +1,39 @@
 import { Form, Formik } from "formik";
-import React, { useCallback, useContext, useEffect } from "react";
-import { object, pattern, size, string, optional } from "superstruct";
+import React, { useCallback, useContext } from "react";
+import { useMutation } from "react-query";
+import { object, pattern, size, string } from "superstruct";
 import { InputField } from "../../form-fields/InputField";
+import { apiBaseUrl } from "../../lib/tests/constants";
 import { validateStruct } from "../../lib/validateStruct";
+import { Sex, UserEditProfile } from "../../types/util-types";
 import { Button } from "../../ui/Button";
 import { ButtonLink } from "../../ui/ButtonLink";
 import { Modal } from "../../ui/Modal";
+import { NativeSelect } from "../../ui/NativeSelect";
 import { AuthContext } from "../auth/AuthProvider";
-import { useMutation } from "react-query";
 import { useTokenStore } from "../auth/useTokenStore";
-import { Sex, UserWithFollowInfo } from "../../types/util-types";
-import { apiBaseUrl } from "../../lib/tests/constants";
-import { updateUserProfile } from "../../ultils/api";
+import DatePicker, { registerLocale } from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import vi from "date-fns/locale/vi"; // the locale you want
+import { dateToStringWithoutTime } from "../../lib/dateToStringWithoutTime";
+import { DatePickerField } from "../../form-fields/DatePickerField";
+registerLocale("vi", vi); // register it with the name you want
 
 const profileStruct = object({
   firstname: size(string(), 2, 50),
   lastname: size(string(), 2, 50),
   username: pattern(string(), /^(\w){4,15}$/),
   about: size(string(), 0, 160),
+  livein: size(string(), 0, 160),
+  email: pattern(string(), /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/),
+  profilePicture: pattern(
+    string(),
+    /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/
+  ),
+  coverPicture: pattern(string(), /^https?:\/\/(www\.|)/),
+  // dateOfBirth: string;
+  // sex: size(string() )
+  // phone: string;
 });
 
 interface EditProfileModalProps {
@@ -49,7 +65,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const { token } = useTokenStore.getState();
 
   const updateUserProfile = useCallback(
-    async (data: UserWithFollowInfo) => {
+    async (data: UserEditProfile) => {
       const res = await fetch(`${apiBaseUrl}/user/update/${conn?.user?.id}`, {
         headers: {
           "Content-Type": "application/json",
@@ -89,25 +105,43 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             phone: user?.phone,
           }}
           validateOnChange={false}
-          // validate={(values) => {
-          //   return validateFn({
-          //     ...(values as any),
-          //     firstname: values.firstname?.trim(),
-          //     lastname: values.lastname?.trim(),
-          //   });
-          // }}
+          validate={(values) => {
+            return validateFn({
+              ...(values as any),
+              firstname: values.firstname?.trim(),
+              lastname: values.lastname?.trim(),
+              username: values.username?.trim(),
+              about: values.about?.trim(),
+            });
+          }}
           onSubmit={async (data) => {
-            const res = await editProfile(data as any);
+            const res = await editProfile({
+              ...data,
+              username: data.username?.trim(),
+              firstname: data.firstname?.trim(),
+              lastname: data.lastname?.trim(),
+              about: data.about?.trim(),
+            } as UserEditProfile);
             if (res.status === "success") {
               if (conn) {
-                setConn({ user: { ...conn?.user, ...(data as any) } });
+                setConn({
+                  user: {
+                    ...conn?.user,
+                    ...(data as any),
+                    username: data.username?.trim(),
+                    firstname: data.firstname?.trim(),
+                    lastname: data.lastname?.trim(),
+                    about: data.about?.trim(),
+                  },
+                });
               }
               onEdit?.(data as any);
               onRequestClose();
             }
+            console.log(data.dateOfBirth);
           }}
         >
-          {({ isSubmitting }) => (
+          {({ isSubmitting, values, setFieldValue }) => (
             <Form className={`w-full flex-col`}>
               <h4 className={`mb-2 text-primary-100`}>Chỉnh sửa hồ sơ</h4>
               <InputField
@@ -120,17 +154,52 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 label={"Địa chỉ ảnh nền"}
                 name="coverPicture"
               />
+              {/* <div className="mb-4 block h-full w-full">
+                <div className={`mb-2 flex text-primary-300`}>Ngày sinh</div>
+                <DatePicker
+                  // value={values.dateOfBirth}
+                  selected={new Date()}
+                  locale="vi"
+                  onChange={(date) =>
+                    setFieldValue("dateOfBirth", dateToStringWithoutTime(date!))
+                  }
+                  className="w-full rounded-8 bg-primary-700 py-2 px-4 text-primary-100 placeholder-primary-300"
+                  maxDate={new Date()}
+                  dateFormat="dd-MM-yyyy"
+                />
+              </div> */}
 
-              <InputField className={`mb-4`} label={"Họ"} name="lastname" />
-              <InputField className={`mb-4`} label={"Tên"} name="firstname" />
-              <InputField className={`mb-4`} label={"Email"} name="email" />
               <InputField
+                type="date"
                 className={`mb-4`}
                 label={"Ngày sinh"}
                 name="dateOfBirth"
               />
+              <InputField className={`mb-4`} label={"Họ"} name="lastname" />
+              <InputField className={`mb-4`} label={"Tên"} name="firstname" />
+              <InputField className={`mb-4`} label={"Email"} name="email" />
               <InputField className={`mb-4`} label={"Địa chỉ"} name="livein" />
-              <InputField className={`mb-4`} label={"Giới tính"} name="sex" />
+              <div className="mb-4 block h-full w-full">
+                <div className={`mb-2 flex text-primary-300`}>Giới tính</div>
+                <NativeSelect
+                  className="w-full"
+                  value={values.sex}
+                  onChange={(e: any) => {
+                    setFieldValue("sex", e.target.value);
+                  }}
+                >
+                  <option value="male" className={`hover:bg-primary-900`}>
+                    Nam
+                  </option>
+                  <option value="female" className={`hover:bg-primary-900`}>
+                    Nữ
+                  </option>
+                  <option value="other" className={`hover:bg-primary-900`}>
+                    Khác
+                  </option>
+                </NativeSelect>
+              </div>
+
               <InputField
                 className={`mb-4`}
                 label={"Số điện thoại"}

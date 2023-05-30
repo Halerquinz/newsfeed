@@ -25,6 +25,20 @@ export type User = {
   followerCount: number;
 };
 
+export type UserEditProfile = {
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  about: string;
+  profilePicture: string;
+  coverPicture: string;
+  dateOfBirth: string;
+  livein: string;
+  sex: Sex;
+  phone: string;
+};
+
 export type UserWithFollowInfo = {
   id: number;
   username: string;
@@ -121,7 +135,10 @@ export interface LikeDetail {
   postId: number;
   createdDate: string;
   updatedDate: string;
+  id: number;
   username: string;
+  firstname: string;
+  lastname: string;
   profilePicture: string;
 }
 

@@ -12,6 +12,7 @@ router.get(
   userController.getUserWithFollowInfo
 );
 router.get("/users/getProfile", isAuth, userController.getUsers);
+router.get("/users/search", isAuth, userController.searchUsers);
 router.post(
   "/update/:userId",
   isAuth,

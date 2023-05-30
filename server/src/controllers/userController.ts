@@ -18,6 +18,7 @@ interface UserRequest {
   livesin: string;
   about: string;
   sex: Sex;
+  dateOfBirth: string;
 }
 
 class UserController {
@@ -131,6 +132,7 @@ class UserController {
       livesin,
       about,
       sex,
+      dateOfBirth,
     } = userRequest;
     const currentUserId = Number(req.userId!);
     const id = Number(req.params.userId);
@@ -158,14 +160,30 @@ class UserController {
       user.livesin = livesin;
       user.about = about;
       user.sex = sex;
+      user.dateOfBirth = dateOfBirth;
       await userRepo.save(user);
-      return res.status(200).json({ status: "success", data: user });
+      return res.status(200).json({ status: "success" });
     } catch (error) {
       let msg;
       if (error instanceof Error) {
         msg = error.message;
       }
       res.status(500).json({ status: "fail", msg });
+    }
+  }
+  async searchUsers(req: Request, res: Response) {
+    try {
+      const keyWord = req.header("text");
+
+      const users =
+        await AppDataSource.query(`SELECT u.id, u.username, u.firstname, u.lastname, u.profilePicture
+         FROM users u
+          WHERE (lastname Like '%${keyWord}%' or firstname Like '%${keyWord}%' or username Like '%${keyWord}%'
+)`);
+
+      return res.status(200).json({ status: "success", data: users });
+    } catch {
+      return res.status(500).json({ status: "fail", msg: "error" });
     }
   }
 

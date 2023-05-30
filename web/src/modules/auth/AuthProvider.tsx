@@ -1,9 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTokenStore } from "./useTokenStore";
 import { apiBaseUrl } from "../../lib/tests/constants";
-import { UserWithFollowInfo } from "../../types/util-types";
+import { User, UserWithFollowInfo } from "../../types/util-types";
 
-type V = { user: UserWithFollowInfo | null } | null;
+type V = { user: User | null } | null;
 
 export const AuthContext = React.createContext<{
   conn: V;

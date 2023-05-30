@@ -3,7 +3,7 @@ import SolidSearch from "../../icons/SolidSearch";
 import { Input } from "../Input";
 import { Spinner } from "../Spinner";
 
-interface SearchBarProps {
+interface SearchBarProps extends React.ComponentPropsWithoutRef<"input"> {
   mobile?: boolean;
   className?: string;
   inputClassName?: "string";

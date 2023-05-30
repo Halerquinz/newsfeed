@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import React, { useCallback, useContext, useState } from "react";
 import { PostCardAvatar } from "./PostCardAvatar";
 import { PostCardDesc } from "./PostCardDesc";
 import { PostCardHeading } from "./PostCardHeading";
@@ -9,7 +9,7 @@ import { PostInteract } from "./PostInteract";
 import { convertTZ } from "../ultils/convertTZ";
 import { apiBaseUrl } from "../lib/tests/constants";
 import { useTokenStore } from "../modules/auth/useTokenStore";
-import { CommentDetail } from "../types/util-types";
+import { CommentDetail, LikeDetail } from "../types/util-types";
 import { PostComment } from "../modules/post/comment/PostComment";
 import { useMutation } from "react-query";
 import { SolidEllipsis } from "../icons";
@@ -20,6 +20,7 @@ import { PostDropdown } from "./PostDropdown";
 import { useRouter } from "next/router";
 import { redirectToProfile } from "../lib/redirectToProfile";
 import { usePreviousRouteStore } from "../global-stores/usePreviousRouteStore";
+import { ListUserLikeModal } from "../modules/post/ListUserLikeModal";
 
 interface PostCardWithCommentProps {
   id: number;
@@ -36,6 +37,7 @@ interface PostCardWithCommentProps {
   commentCounts: number;
   likeStatus: number | null;
   commentMap: CommentDetail[];
+  likes: LikeDetail[];
 }
 
 export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
@@ -53,12 +55,14 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
   commentCounts,
   likeStatus,
   commentMap,
+  likes,
 }) => {
   const { conn } = useContext(AuthContext);
   const { token } = useTokenStore.getState();
   const { route } = usePreviousRouteStore.getState();
   const { push, replace } = useRouter();
 
+  console.log(likes);
   const deletePost = useCallback(async () => {
     const res = await fetch(`${apiBaseUrl}/post/delete/${id}`, {
       headers: {
@@ -112,6 +116,7 @@ export const PostCardWithComment: React.FC<PostCardWithCommentProps> = ({
             comments={commentCounts}
             likes={likeCounts}
             likeStatus={likeStatus}
+            likesMap={likes}
           />
         }
         comment={

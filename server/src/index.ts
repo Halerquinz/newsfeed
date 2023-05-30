@@ -140,3 +140,55 @@ const startApp = async () => {
 };
 
 startApp();
+// const startApp = async () => {
+//   try {
+//     const connection = await AppDataSource.initialize();
+//     if (connection) {
+//       console.log("Connect db success");
+//       await server.listen(PORT, (): void => {
+//         console.log(`Server is running on port: ${PORT}`);
+//       });
+//       io.on("connection", (socket: Socket) => {
+//         console.log("User is connected ", activeUsers);
+//         socket.on("new-user-add", (newUserId: number) => {
+//           console.log("newUserId: ", newUserId);
+//           if (!activeUsers.some((user) => user.userId === newUserId)) {
+//             activeUsers.push({
+//               userId: newUserId,
+//               socketId: socket.id,
+//             });
+//             console.log(activeUsers);
+//           }
+//           io.emit("get-users", activeUsers);
+//         });
+
+//         socket.on("send-message", (data) => {
+//           const { receiverId } = data;
+//           const user: ActiveUsers | undefined = activeUsers.find(
+//             (user) => user.userId === receiverId
+//           );
+//           console.log(`Sending from socket to: ${receiverId}`);
+//           console.log(data);
+//           console.log("user", user);
+//           if (user) {
+//             console.log(`usersocketid: ${user.socketId}`);
+//             io.to(user.socketId).emit("receive-message", data);
+//           }
+//         });
+
+//         socket.on("disconnect", () => {
+//           activeUsers.filter((user) => user.socketId !== socket.id);
+//           console.log("User is disconnected ", activeUsers);
+//           io.emit("get-users", activeUsers);
+//         });
+//       });
+//     } else {
+//       console.log("Connect db fail");
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     console.log("Connect db fail");
+//   }
+// };
+
+// startApp();

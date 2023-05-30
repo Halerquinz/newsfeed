@@ -24,6 +24,28 @@ const customStyles = {
       maxWidth: 530,
     },
   },
+  fixedHeight: {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.8)",
+      zIndex: 1000,
+    },
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      borderRadius: 8,
+      padding: "40px 40px 40px 40px",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "var(--color-primary-800)",
+      border: "none",
+      height: "50vh",
+      width: "90%",
+      maxWidth: 530,
+    },
+  },
+
   userPreview: {
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.8)",
@@ -67,7 +89,7 @@ export const Modal: React.FC<
       style={customStyles[variant]}
       {...props}
     >
-      <div className={`flex w-full flex-col`}>
+      <div className={`flex w-full flex-col `}>
         <div className={`absolute right-3 top-3 flex justify-end`}>
           <button
             className={`p-1 text-primary-100`}

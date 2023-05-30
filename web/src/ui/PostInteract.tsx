@@ -8,12 +8,16 @@ import { formatNumber } from "../ultils/formatNumber";
 import { useUpdateQuery } from "../shared-hooks/useUpdateQuery";
 import { useMutation } from "react-query";
 import { queryClient } from "../lib/tests/queryClient";
+import { CreatePostModal } from "../modules/dashboard/CreatePostModal";
+import { ListUserLikeModal } from "../modules/post/ListUserLikeModal";
+import { LikeDetail } from "../types/util-types";
 
 interface PostInteractProps {
   postId: number;
   likes: number;
   comments: number;
   likeStatus: number | null;
+  likesMap: LikeDetail[];
 }
 
 export const PostInteract: React.FC<PostInteractProps> = ({
@@ -21,8 +25,10 @@ export const PostInteract: React.FC<PostInteractProps> = ({
   likes,
   comments,
   likeStatus,
+  likesMap,
 }) => {
   const { token } = useTokenStore.getState();
+  const [modal, setModal] = useState(false);
 
   const updateLikePost = useCallback(
     async (likeStatus: string) => {
@@ -79,8 +85,11 @@ export const PostInteract: React.FC<PostInteractProps> = ({
         >
           <SolidLike checked={!!likeStatus} />
         </Button>
-        <div className="ml-3 font-bold text-primary-300">
-          {formatNumber(likes)}
+        <div
+          onClick={() => setModal(true)}
+          className="ml-3 cursor-pointer font-bold text-primary-300 hover:underline"
+        >
+          {`${formatNumber(likes)}`}
         </div>
       </div>
       <div className="mr-10 flex items-center">
@@ -92,6 +101,14 @@ export const PostInteract: React.FC<PostInteractProps> = ({
         />
         <div className="ml-3 font-bold text-primary-300">{comments}</div>
       </div>
+      {modal ? (
+        <ListUserLikeModal
+          likesMap={likesMap}
+          onRequestClose={() => {
+            setModal(false);
+          }}
+        />
+      ) : null}
     </>
   );
 };

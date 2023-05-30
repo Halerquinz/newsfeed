@@ -47,10 +47,8 @@ export const LoginForm: React.FC<LoginFormProps> = ({}) => {
         // );
 
         if (data.status === "success") {
-          // setTimeout(() => {
           useTokenStore.getState().setToken({ token: data.data.token });
           push("/dash");
-          // }, 2000);
         }
       }}
     >

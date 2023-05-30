@@ -30,6 +30,8 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
     mb = "mb-8";
   }
 
+  console.log(data);
+
   useEffect(() => {
     if (data) {
       setPostData(data);
@@ -58,6 +60,7 @@ export const PostPanelController: React.FC<PostPanelControllerProps> = ({
           <PostCardWithComment
             commentMap={data?.data?.comments!}
             {...data?.data?.post!}
+            likes={data.data?.likes!}
           />
         </div>
       </MiddlePanel>

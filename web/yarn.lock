@@ -427,6 +427,11 @@
   dependencies:
     "has" "^1.0.3"
 
+"is-email@^1.0.2":
+  "integrity" "sha512-UojUgD2EhDTBQ2SGKwrK9edce5phRzgLsP+V5+Uu2Swi+uvjVXgH3zduM3HhT9iaC/9Kq19/TYUbP0jPoi6ioA=="
+  "resolved" "https://registry.npmjs.org/is-email/-/is-email-1.0.2.tgz"
+  "version" "1.0.2"
+
 "is-extglob@^2.1.1":
   "integrity" "sha512-SbKbANkN603Vi4jEZv49LeVJMn4yGwsbzZworEoyEiutsN3nJYdbO36zfhGJ6QEDpOZIFkDtnq5JRxmvl3jsoQ=="
   "resolved" "https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz"

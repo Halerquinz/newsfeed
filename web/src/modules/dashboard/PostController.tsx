@@ -98,7 +98,7 @@ export const PostController: React.FC<PostControllerProps> = () => {
         <div className="flex flex-col space-y-4">
           {cursors.map((cursor, i) => (
             <Page
-              limit={10}
+              limit={5}
               key={i}
               cursor={cursor}
               onLoadMore={(c) => setCursors([...cursors, c])}
